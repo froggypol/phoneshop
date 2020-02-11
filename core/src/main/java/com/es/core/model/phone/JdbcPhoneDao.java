@@ -1,6 +1,5 @@
 package com.es.core.model.phone;
 
-import com.es.core.model.exceptions.CustomNotFoundException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -13,34 +12,30 @@ import java.util.Optional;
 public class JdbcPhoneDao implements PhoneDao {
 
     private String SQL_statement = "select phones.id, phones.brand, phones.model, phones.price, phones.imageUrl, colors.code, colors.id " +
-            "from phones join phone2color on phones.id = phone2color.phoneId " +
-            "join colors on phone2color.colorId = colors.id ";
+                                   "from phones " +
+                                   "join phone2color on phones.id = phone2color.phoneId " +
+                                   "join colors on phone2color.colorId = colors.id";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
 
     public Optional<Phone> get(final Long key) {
         List<Phone> resultList = jdbcTemplate.query(SQL_statement, new PhoneRowMapper());
-        if (key.intValue() - 1000 >= resultList.size()) {
-            throw new CustomNotFoundException("custom_404", "no such phone");
-        } else {
-            return Optional.of(resultList.get(key.intValue() - 1000));
-        }
+        Optional<Phone> expectedPhone = Optional.of(resultList.get(Math.abs(key.intValue() - 1000)));
+        return expectedPhone;
     }
 
     public void save(final Phone phoneToSave) {
-        List<Phone> phoneList = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        System.out.println(phoneList.size());
+        List<Phone> phoneList = jdbcTemplate.query(SQL_statement, new PhoneRowMapper());
         int index = phoneList.indexOf(phoneToSave);
         if (index >= 0) {
-            updateColorsDataBases(phoneToSave);
-            jdbcTemplate.update("update phones set (phones.imageUrl, phones.price) = (?, ?)",
-                    phoneToSave.getImageUrl(), phoneToSave.getPrice());
+            jdbcTemplate.update("update phones set ( phones.price) = ( ?)",
+                    phoneToSave.getPrice());
         } else if (index < 0) {
-            jdbcTemplate.update("insert into phones (brand, model, price, imageUrl) values (?, ?, ?, ?)",
-                    phoneToSave.getBrand(), phoneToSave.getModel(), phoneToSave.getPrice(), phoneToSave.getImageUrl());
-            updateColorsDataBases(phoneToSave);
+            jdbcTemplate.update("insert into phones (brand, model, price, imageUrl) values (?, ?, ?)",
+                    phoneToSave.getBrand(), phoneToSave.getModel(), phoneToSave.getPrice());
         }
+        updateColorsDataBases(phoneToSave);
     }
 
     private void updateColorsDataBases(Phone phoneToSave) {
@@ -59,19 +54,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<Phone> findAll(int offset, int limit) {
         PhoneRowMapper phoneRowMapper = new PhoneRowMapper();
-        jdbcTemplate.query(SQL_statement + "offset " + offset + " limit " + limit, phoneRowMapper);
+        jdbcTemplate.query(SQL_statement, phoneRowMapper);
         return phoneRowMapper.getFilledPhones();
-    }
-
-    public void delete(Phone phone) {
-        Long idToDelete = phone.getId();
-        List<Phone> list = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-        System.out.println(list.size());
-        if (list.contains(phone)) {
-            jdbcTemplate.update("delete from phones where phones.id = ? ", idToDelete);
-            list = jdbcTemplate.query("select * from phones", new BeanPropertyRowMapper<>(Phone.class));
-            System.out.println(list.size());
-        } else
-            return;
     }
 }

@@ -26,7 +26,7 @@ public class PhoneRowMapper implements RowMapper<Phone> {
         Color color = new Color(resultSet.getLong("id"), resultSet.getString("code"));
         phone.getColors().add(color);
         int index = filledPhones.indexOf(phone);
-        if(index >= 0) {
+        if (index >= 0) {
             filledPhones.get(filledPhones.indexOf(phone)).getColors().add(color);
         } else {
             filledPhones.add(phone);

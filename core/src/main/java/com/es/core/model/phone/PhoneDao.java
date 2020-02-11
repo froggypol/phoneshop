@@ -11,5 +11,4 @@ public interface PhoneDao {
 
     List<Phone> findAll(int offset, int limit);
 
-    void delete(Phone phone);
 }

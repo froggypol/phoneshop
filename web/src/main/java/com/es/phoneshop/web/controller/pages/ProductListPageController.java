@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping (value = "/productList")
+@RequestMapping(value = "/productList")
 public class ProductListPageController {
     @Resource
     private PhoneService phoneService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String showProductList(Model model) {
-        model.addAttribute("phones", phoneService.findAll(0, 10));
+        model.addAttribute("phones", phoneService.findAll(0, 5));
         return "productList";
     }
 
