@@ -16,7 +16,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     private String limit;
 
-    private static final String joining_tables_SQL_statement = "select phones.id, phones.brand, phones.model, phones.price, phones.imageUrl, colors.code, colors.id " +
+    private static final String joiningTablesSQLStatement = "select phones.id, phones.brand, phones.model, phones.price, phones.imageUrl, colors.code, colors.id " +
                                                                "from phones " +
                                                                "left join phone2color on phones.id = phone2color.phoneId " +
                                                                "left join colors on phone2color.colorId = colors.id";
@@ -24,23 +24,23 @@ public class JdbcPhoneDao implements PhoneDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    @Resource(name="offsetProperty")
+    @Resource(name="limitProperty")
     private Properties myProperties;
 
     public Optional<Phone> get(final Long key) {
-        List<Phone> resultList = listPhones(joining_tables_SQL_statement);
+        List<Phone> resultList = getPhoneListWithColors(joiningTablesSQLStatement);
         Optional<Phone> expectedPhone = resultList.stream()
                                                   .filter(phone -> { return phone.getId().equals(key); })
                                                   .findAny();
         return expectedPhone;
     }
 
-    private List<Phone> listPhones(String sql_statement) {
+    private List<Phone> getPhoneListWithColors(String sql_statement) {
         return jdbcTemplate.query(sql_statement, new PhoneExtractor());
     }
 
     public void save(final Phone phoneToSave) {
-        List<Phone> phoneList = listPhones(joining_tables_SQL_statement);
+        List<Phone> phoneList = getPhoneListWithColors(joiningTablesSQLStatement);
         int index = phoneList.indexOf(phoneToSave);
         if (index >= 0) {
             jdbcTemplate.update("update phones set (phones.price) = (?)", phoneToSave.getPrice());
@@ -83,6 +83,6 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<Phone> findAll(int offset) {
         limit = myProperties.getProperty("data.limit");
-        return listPhones(joining_tables_SQL_statement + " offset " + offset + " limit " + limit);
+        return getPhoneListWithColors(joiningTablesSQLStatement + " offset " + offset + " limit " + limit);
     }
 }
