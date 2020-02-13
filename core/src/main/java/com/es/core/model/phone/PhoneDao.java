@@ -9,6 +9,6 @@ public interface PhoneDao {
 
     void save(Phone phone);
 
-    List<Phone> findAll(int offset, int limit);
+    List<Phone> findAll(int offset);
 
 }

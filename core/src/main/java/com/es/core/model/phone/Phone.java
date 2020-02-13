@@ -62,22 +62,6 @@ public class Phone {
 
     private String description;
 
-    public Phone(Phone phone) {
-        this.setId(phone.getId());
-        this.setBrand(phone.getBrand());
-        this.setModel(phone.getModel());
-        this.setPrice(phone.getPrice());
-        this.setImageUrl(phone.getImageUrl());
-    }
-
-    public Phone() {
-        this.setId(1l);
-        this.setBrand("Boo");
-        this.setModel("Boo");
-        this.setPrice(BigDecimal.ONE);
-        this.setImageUrl("Boo-image");
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

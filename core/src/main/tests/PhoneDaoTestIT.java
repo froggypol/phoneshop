@@ -44,7 +44,7 @@ public class PhoneDaoTestIT {
 
     @Test
     public void notEmptyDataBaseWhenPhoneDaoTestFindAll() {
-        Assert.assertTrue(jdbcPhoneDao.findAll(0, 3).size() != 0);
+        Assert.assertTrue(jdbcPhoneDao.findAll(0).size() != 0);
     }
 
     @After
@@ -64,7 +64,8 @@ public class PhoneDaoTestIT {
         actualParameterPhone.setImageUrl(null);
         actualParameterPhone.setColors(new HashSet<>());
 
-        expectedPhone = new Phone(jdbcPhoneDao.get(1000l).get());
+        expectedPhone = new Phone();
+        expectedPhone = jdbcPhoneDao.get(1000l).get();
 
         Assert.assertEquals(expectedPhone, actualParameterPhone);
     }

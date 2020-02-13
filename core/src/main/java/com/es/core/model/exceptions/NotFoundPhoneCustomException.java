@@ -1,6 +1,6 @@
 package com.es.core.model.exceptions;
 
-public class CustomNotFoundException extends IndexOutOfBoundsException {
+public class NotFoundPhoneCustomException extends IndexOutOfBoundsException {
 
     private String errCode;
 
@@ -22,8 +22,8 @@ public class CustomNotFoundException extends IndexOutOfBoundsException {
         this.errMsg = errMsg;
     }
 
-    public CustomNotFoundException(String errCode, String errMsg) {
-        this.errCode = errCode;
-        this.errMsg = errMsg;
+    public NotFoundPhoneCustomException() {
+        this.errCode = "404";
+        this.errMsg = "Not found such phone";
     }
 }

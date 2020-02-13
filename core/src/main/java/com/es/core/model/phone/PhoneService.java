@@ -1,6 +1,6 @@
 package com.es.core.model.phone;
 
-import com.es.core.model.exceptions.CustomNotFoundException;
+import com.es.core.model.exceptions.NotFoundPhoneCustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +13,12 @@ public class PhoneService {
     @Autowired
     private JdbcPhoneDao phoneDao;
 
-    public Phone get(final Long key) throws CustomNotFoundException {
+    public Phone get(final Long key) throws NotFoundPhoneCustomException {
         Optional<Phone> phone = phoneDao.get(key);
         if (phone.isPresent()) {
             return phone.get();
         } else {
-            throw new CustomNotFoundException("custom_404", "no such phone");
+            throw new NotFoundPhoneCustomException();
         }
     }
 
@@ -26,7 +26,7 @@ public class PhoneService {
         phoneDao.save(phoneToSave);
     }
 
-    public List<Phone> findAll(int offset, int limit) {
-        return phoneDao.findAll(offset, limit);
+    public List<Phone> findAll(int offset) {
+        return phoneDao.findAll(offset);
     }
 }
