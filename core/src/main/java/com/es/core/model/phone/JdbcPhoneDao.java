@@ -46,10 +46,8 @@ public class JdbcPhoneDao implements PhoneDao {
             jdbcTemplate.update("update phones set (phones.price) = (?)", phoneToSave.getPrice());
             updateColorsDataBases(phoneToSave, phoneList.get(index));
         } else if (index < 0) {
-            phoneList = getPhoneListWithColors(joiningTablesSQLStatement);
             jdbcTemplate.update("insert into phones (brand, model, price, imageUrl) values (?, ?, ?, ?)",
                     phoneToSave.getBrand(), phoneToSave.getModel(), phoneToSave.getPrice(), phoneToSave.getImageUrl());
-            phoneList = getPhoneListWithColors(joiningTablesSQLStatement);
             insertColorsToNewPhoneIfExists(phoneToSave);
         }
     }
@@ -84,7 +82,6 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<Phone> findAll(int offset) {
         limit = myProperties.getProperty("data.limit");
-        System.out.println(limit);
         return getPhoneListWithColors(joiningTablesSQLStatement + " offset " + offset + " limit " + limit);
     }
 }
