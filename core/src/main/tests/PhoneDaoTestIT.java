@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,8 +20,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/context/test_App_Context.xml")
-@ComponentScan("com.es.core")
+@ContextConfiguration("classpath:resources/test_App_Context.xml")
 public class PhoneDaoTestIT {
 
     @Resource
@@ -36,7 +34,7 @@ public class PhoneDaoTestIT {
 
     @Before
     public void setUp() {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("/context/test_App_Context.xml");
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("/resources/test_App_Context.xml");
         dataSource = (DataSource)applicationContext.getBean("dataSource");
         jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(dataSource);
@@ -74,18 +72,19 @@ public class PhoneDaoTestIT {
     public void whenTestPhoneDaoSave() {
         Phone savingPhone = new Phone();
 
-        savingPhone.setId(1005L);
+        savingPhone.setId(1002L);
         savingPhone.setModel("ZTE Z6");
         savingPhone.setPrice(BigDecimal.TEN);
         savingPhone.setBrand("ZTE");
         savingPhone.setImageUrl("lalala.jpg");
-        savingPhone.getColors().add(new Color(1000L, "Black"));
+        savingPhone.getColors().add(new Color(1001L, "White"));
 
         jdbcPhoneDao.save(savingPhone);
 
-        Phone foundPhoneAfterSaving = jdbcPhoneDao.get(1005L).get();
+        Phone foundPhoneAfterSaving = jdbcPhoneDao.get(1002L).get();
 
         Assert.assertEquals(savingPhone, foundPhoneAfterSaving);
+        Assert.assertEquals(savingPhone.getColors(), foundPhoneAfterSaving.getColors());
 
     }
 }

@@ -20,7 +20,7 @@ public class PhoneExtractor implements ResultSetExtractor<List<Phone>> {
             phone.setModel(resultSet.getString("model"));
             phone.setPrice(resultSet.getBigDecimal("price"));
             phone.setImageUrl(resultSet.getString("imageUrl"));
-            Color color = new Color(resultSet.getLong("id"), resultSet.getString("code"));
+            Color color = new Color(resultSet.getLong("colorId"), resultSet.getString("code"));
             phone.getColors().add(color);
             int index = phoneList.indexOf(phone);
             if (index >= 0) {
