@@ -1,10 +1,10 @@
 package com.es.core.model.phone;
 
 import com.es.core.model.exceptions.NotFoundPhoneCustomException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ public class PhoneService {
     @Value("${phones.limit}")
     private int limit;
 
-    @Autowired
+    @Resource
     private JdbcPhoneDao phoneDao;
 
     public Phone get(final Long key) throws NotFoundPhoneCustomException {
