@@ -7,43 +7,36 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 @Component
 @PropertySource("classpath:properties/application.properties")
 public class JdbcPhoneDao implements PhoneDao {
 
-    private String limit;
+    private static final String PHONES_WITH_COLORS_QUERY = "select phones.id, phones.brand, phones.model, phones.price, phones.imageUrl, colors.code, phone2color.colorId " +
+                                                           "from phones " +
+                                                           "join phone2color on phones.id=phone2color.phoneId " +
+                                                           "join colors on phone2color.colorId=colors.id";
 
-    private static final String phonesWithColorsSQLStatement = "select phones.id, phones.brand, phones.model, phones.price, phones.imageUrl, colors.code, phone2color.colorId " +
-                                                               "from phones " +
-                                                               "join phone2color on phones.id=phone2color.phoneId " +
-                                                               "join colors on phone2color.colorId=colors.id";
-
-    private static final String phonesWithColorsWithLimitOffsetSQLStatement = phonesWithColorsSQLStatement + "  limit ?  offset ?";
-
+    private static final String PHONES_WITH_COLORS_AND_LIMIT_OFFSET_QUERY = PHONES_WITH_COLORS_QUERY + "  limit ?  offset ?";
 
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    @Resource(name = "limitProperty")
-    private Properties myProperties;
-
     public Optional<Phone> get(final Long key) {
-        return  getPhoneListWithColors(phonesWithColorsSQLStatement).stream()
-                                                                    .filter(phone -> { return phone.getId().equals(key); })
-                                                                    .findAny();
+        return  getPhoneListWithColors().stream()
+                                        .filter(phone ->  phone.getId().equals(key))
+                                        .findAny();
     }
 
-    private List<Phone> getPhoneListWithColors(String sqlStatementForPhonesWithColors) {
-        return jdbcTemplate.query(sqlStatementForPhonesWithColors, new PhoneExtractor());
+    private List<Phone> getPhoneListWithColors() {
+        return jdbcTemplate.query(PHONES_WITH_COLORS_QUERY, new PhoneExtractor());
     }
 
     public void save(final Phone phoneToSave) {
-        List<Phone> phoneList = getPhoneListWithColors(phonesWithColorsSQLStatement);
-        int index = phoneList.indexOf(phoneToSave);
-        if (phoneList.contains(phoneList.get(index))) {
+        List<Phone> phoneList = getPhoneListWithColors();
+        if (phoneList.contains(phoneToSave)) {
             jdbcTemplate.update("update phones set (phones.price) = (?)", phoneToSave.getPrice());
+            int index = phoneList.indexOf(phoneToSave);
             updateColorsDataBases(phoneToSave, phoneList.get(index));
         } else {
             jdbcTemplate.update("insert into phones (brand, model, price, imageUrl) values (?, ?, ?, ?)",
@@ -79,8 +72,7 @@ public class JdbcPhoneDao implements PhoneDao {
         }
     }
 
-    public List<Phone> findAll(int offset) {
-        limit = myProperties.getProperty("data.limit");
-        return jdbcTemplate.query(phonesWithColorsWithLimitOffsetSQLStatement, new Object[]{limit, offset}, new PhoneExtractor());
+    public List<Phone> findAll(int limit, int offset) {
+        return jdbcTemplate.query(PHONES_WITH_COLORS_AND_LIMIT_OFFSET_QUERY, new Object[]{limit, offset}, new PhoneExtractor());
     }
 }

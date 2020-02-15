@@ -42,7 +42,7 @@ public class PhoneDaoTestIT {
 
     @Test
     public void notEmptyDataBaseWhenPhoneDaoTestFindAll() {
-        Assert.assertTrue(jdbcPhoneDao.findAll(0).size() != 0);
+        Assert.assertTrue(jdbcPhoneDao.findAll(0, 5).size() != 0);
     }
 
     @After
@@ -63,7 +63,7 @@ public class PhoneDaoTestIT {
         actualParameterPhone.setColors(new HashSet<>());
 
         expectedPhone = new Phone();
-        expectedPhone = jdbcPhoneDao.get(1000l).get();
+        expectedPhone = jdbcPhoneDao.get(1000L).get();
 
         Assert.assertEquals(expectedPhone, actualParameterPhone);
     }

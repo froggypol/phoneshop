@@ -2,6 +2,7 @@ package com.es.core.model.phone;
 
 import com.es.core.model.exceptions.NotFoundPhoneCustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Optional;
 
 @Service
 public class PhoneService {
+
+    @Value("${phones.limit}")
+    private int limit;
 
     @Autowired
     private JdbcPhoneDao phoneDao;
@@ -27,6 +31,6 @@ public class PhoneService {
     }
 
     public List<Phone> findAll(int offset) {
-        return phoneDao.findAll(offset);
+        return phoneDao.findAll(limit, offset);
     }
 }

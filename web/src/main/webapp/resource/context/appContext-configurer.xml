@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="limitProperty" name="limit" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
         <property name="location">
             <value>classpath:properties/application.properties</value>
         </property>
