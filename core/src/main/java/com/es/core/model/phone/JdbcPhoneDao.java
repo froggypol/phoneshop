@@ -24,7 +24,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public Optional<Phone> get(final Long key) {
         return  getPhoneListWithColors().stream()
-                                        .filter(phone ->  phone.getId().equals(key))
+                                        .filter(phone -> phone.getId().equals(key))
                                         .findAny();
     }
 
