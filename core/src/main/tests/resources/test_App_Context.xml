@@ -9,7 +9,7 @@
 
     <context:component-scan base-package="com.es.core" />
 
-    <import resource="classpath:context/appContext-cofigurer-test.xml"/>
+    <import resource="classpath:context/appContext-configurer-test.xml"/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.h2.Driver"/>
