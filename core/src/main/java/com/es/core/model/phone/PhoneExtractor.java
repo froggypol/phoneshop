@@ -22,8 +22,7 @@ public class PhoneExtractor implements ResultSetExtractor<List<Phone>> {
             phone.setImageUrl(resultSet.getString("imageUrl"));
             Color color = new Color(resultSet.getLong("colorId"), resultSet.getString("code"));
             phone.getColors().add(color);
-            int index = phoneList.indexOf(phone);
-            if (index >= 0) {
+            if (phoneList.contains(phone)) {
                 phoneList.get(phoneList.indexOf(phone)).getColors().add(color);
             } else {
                 phoneList.add(phone);
