@@ -5,10 +5,10 @@
     <div>
         <label>
             <input type="text" value="My cart : 0 items 0$">
-        <a href="${pageContext.servletContext.contextPath}/cart">
-            PhoneShop cart:
-            <jsp:include page="minicart.jsp"></jsp:include>
-        </a>
+            <a href="${pageContext.servletContext.contextPath}/cart">
+                PhoneShop cart:
+                <jsp:include page="minicart.jsp"></jsp:include>
+            </a>
         </label>
     </div>
 </header>
@@ -22,7 +22,7 @@
     <table border="1px">
         <thead>
 <p>
-<form method="get">
+<form method="get" action="/phoneshop_web_war_exploded/productList/${param.query}">
     <input name="query" value="${param.query}"/>
     <button>Search</button>
 </form>
@@ -59,7 +59,8 @@
         </form>
         <form method="get" action="/phoneshop_web_war_exploded/productList/${param.query}&size&desc">
             <button value="desc">desc</button>
-        </form></td>
+        </form>
+    </td>
     <td>Color</td>
     <td>Description</td>
     <td>Quantity</td>

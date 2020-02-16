@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ProductListPageController {
@@ -24,8 +25,8 @@ public class ProductListPageController {
     }
 
     @RequestMapping(value = "/productList")
-    public String showProductList(Model model) {
-        model.addAttribute("phones", phoneService.findAll(0));
+    public String showProductList(@RequestParam(value = "query", required = false) String phoneNameQuery, Model model) {
+        model.addAttribute("phones", phoneService.searchForPhonesByQuery(phoneNameQuery));
         return "productList";
     }
 
