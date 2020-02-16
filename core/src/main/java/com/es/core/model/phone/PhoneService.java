@@ -33,4 +33,12 @@ public class PhoneService {
     public List<Phone> findAll(int offset) {
         return phoneDao.findAll(limit, offset);
     }
+
+    public List<Phone> searchFor(String phoneNameQuery, String fieldToSort, String orderToSort) {
+        return  phoneDao.searchFor(phoneNameQuery, fieldToSort, orderToSort);
+    }
+
+    public List<Phone> searchForPhonesByQuery(String phoneNameQuery) {
+        return phoneDao.searchForPhonesByNameQuery(phoneNameQuery);
+    }
 }

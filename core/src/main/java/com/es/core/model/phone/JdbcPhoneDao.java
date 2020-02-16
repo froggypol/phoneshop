@@ -5,14 +5,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Component
 @PropertySource("classpath:properties/application.properties")
 public class JdbcPhoneDao implements PhoneDao {
 
-    private static final String PHONES_WITH_COLORS_QUERY = "select phones.id, phones.brand, phones.model, phones.price, phones.imageUrl, colors.code, phone2color.colorId " +
+    private static final String PHONES_WITH_COLORS_QUERY = "select phones.id, phones.brand, phones.model, phones.price, phones.displaySizeInches, phones.imageUrl," +
+                                                           " phones.description, colors.code, phone2color.colorId " +
                                                            "from phones " +
                                                            "join phone2color on phones.id=phone2color.phoneId " +
                                                            "join colors on phone2color.colorId=colors.id";
@@ -74,5 +78,35 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<Phone> findAll(int limit, int offset) {
         return jdbcTemplate.query(PHONES_WITH_COLORS_AND_LIMIT_OFFSET_QUERY, new Object[]{limit, offset}, new PhoneExtractor());
+    }
+
+    public List<Phone> searchFor(String productName, String fieldToSort, String orderToSort) {
+        List<Phone> phoneList = getPhoneListWithColors();
+        List<Phone> res = new ArrayList<>();
+        Sort sort = new Sort(phoneList);
+        if (fieldToSort == null && orderToSort == null) {
+            return phoneList;
+        } else if (productName != null && !productName.equals("")) {
+            sort.setListToSort(searchForPhonesByNameQuery(productName));
+            res = sort.getListToSort();
+        }
+        return sort.sortProductsList(fieldToSort, orderToSort);
+    }
+    public List<Phone> searchForPhonesByNameQuery(String phoneNameQuery) {
+        List<Phone> phoneList = getPhoneListWithColors();
+        List<Phone> res = new ArrayList<>();
+        if (phoneNameQuery == null || phoneNameQuery == "") {
+            return getPhoneListWithColors();
+        } else {
+            String[] list = Pattern.compile(" ").split(phoneNameQuery);
+            phoneList.forEach(product -> {
+                Arrays.stream(list).forEach(word -> {
+                    if (word == null || product.getModel().contains(word) && !res.contains(product)) {
+                        res.add(product);
+                    }
+                });
+            });
+            return res;
+        }
     }
 }

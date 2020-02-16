@@ -1,10 +1,11 @@
 package com.es.core.cart;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 public interface CartService {
 
-    Cart getCart();
+    Cart getCart(HttpSession request);
 
     void addPhone(Long phoneId, Long quantity);
 

@@ -2,13 +2,16 @@ package com.es.core.cart;
 
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Service
 public class HttpSessionCartService implements CartService {
     @Override
-    public Cart getCart() {
+    public Cart getCart(HttpSession session) {
         throw new UnsupportedOperationException("TODO");
+        //Cart cart = (Cart)session.getAttribute("cart");
+       // return cart;
     }
 
     @Override
