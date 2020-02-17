@@ -82,13 +82,13 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<Phone> searchFor(String productName, String fieldToSort, String orderToSort) {
         List<Phone> phoneList = getPhoneListWithColors();
-        List<Phone> res = new ArrayList<>();
         Sort sort = new Sort(phoneList);
         if (fieldToSort == null && orderToSort == null) {
+            phoneList = searchForPhonesByNameQuery(productName);
             return phoneList;
         } else if (productName != null && !productName.equals("")) {
             sort.setListToSort(searchForPhonesByNameQuery(productName));
-            res = sort.getListToSort();
+            sort.getListToSort();
         }
         return sort.sortProductsList(fieldToSort, orderToSort);
     }
@@ -101,7 +101,8 @@ public class JdbcPhoneDao implements PhoneDao {
             String[] list = Pattern.compile(" ").split(phoneNameQuery);
             phoneList.forEach(product -> {
                 Arrays.stream(list).forEach(word -> {
-                    if (word == null || product.getModel().contains(word) && !res.contains(product)) {
+                    if (product.getModel() != null && product.getDescription() != null
+                    && (word == null || product.getModel().contains(word)  || product.getDescription().contains(word) && !res.contains(product))) {
                         res.add(product);
                     }
                 });
