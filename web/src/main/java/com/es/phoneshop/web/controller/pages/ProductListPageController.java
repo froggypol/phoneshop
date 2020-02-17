@@ -26,7 +26,6 @@ public class ProductListPageController {
                                    Model model) {
         model.addAttribute("phones", phoneService.searchFor(phoneNameQuery, fieldToSort, orderToSort));
         List<Phone> phoneList = phoneService.searchFor(phoneNameQuery, fieldToSort, orderToSort);
-        System.out.println(page);
         PagedListHolder<Phone> phonePagedListHolder = new PagedListHolder<>(phoneList);
         phonePagedListHolder.setPageSize(9);
         model.addAttribute("maxPages", phonePagedListHolder.getPageCount());

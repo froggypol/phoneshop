@@ -3,6 +3,13 @@
 <html>
 
 <header>
+
+    <script src="js/pagination.js"></script>
+    <link href="css/pagination.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
     <div>
         <label>
             <input type="text" value="My cart : 0 items 0$">
@@ -119,50 +126,43 @@
 </table>
 </p>
 
-<span style="float:left;">
-<div>
-    <c:choose>
-        <c:when test="${pageListHolder.firstPage}"> Prev </c:when>
-        <c:otherwise>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
             <form style="display: inline-block">
-            <button href="/phoneshop_web_war_exploded/productList"> Prev </button>
-            <input type="hidden" name="page" value="${page-1}">
-     </form>
-        </c:otherwise>
-    </c:choose>
-
-</span>
-<span>
-    <c:forEach begin="0" end="${pageListHolder.pageCount-1}" varStatus="loop">
-        <c:choose>
-            <c:when test="${loop.index == pageListHolder.page}">
-                <form style="display: inline-block">
-                    <button href="/phoneshop_web_war_exploded/productList" style="background-color: crimson" >${loop.index+1}
-                    <input type="hidden" name="page" value="${loop.index+1}">
-                    </button>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <form style="display: inline-block">
-                <button href="/phoneshop_web_war_exploded/productList">${loop.index+1}
-                <input type="hidden" name="page" value="${loop.index+1}">
-                </button>
-                </form>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-    </span>
-<span>
-    <c:choose>
-        <c:when test="${pageListHolder.lastPage}"> Next </c:when>
-        <c:otherwise>
-            <form style="display: inline-block">
-            <button href="/phoneshop_web_war_exploded/productList"> Next </button>
-            <input type="hidden" name="page" value="${page + 1}">
-                </form>
-        </c:otherwise>
-    </c:choose>
-    </span>
-</form>
+                <button class="page-link" href="/phoneshop_web_war_exploded/productList"> Prev </button>
+                <input type="hidden" name="page" value="${page-1}">
+            </form>
+        </li>
+        <c:if test="${(page + 9) < (pageListHolder.pageCount-1)}">
+            <c:forEach begin="${page}" end="${page+9}" varStatus="loop">
+                <li class="page-item">
+                    <form style="display: inline-block">
+                        <button class="page-link" href="/phoneshop_web_war_exploded/productList">${loop.index+1}
+                            <input type="hidden" name="page" value="${loop.index+1}">
+                        </button>
+                    </form>
+                </li>
+            </c:forEach>
+        </c:if>
+        <c:if test="${(page + 9) > (pageListHolder.pageCount-1)}">
+            <c:forEach begin="${page}" end="${pageListHolder.pageCount - 1}" varStatus="loop">
+                <li class="page-item">
+                    <form>
+                        <button class="page-link" href="/phoneshop_web_war_exploded/productList">${loop.index+1}
+                            <input type="hidden" name="page" value="${loop.index+1}">
+                        </button>
+                    </form>
+                </li>
+            </c:forEach>
+        </c:if>
+        <li class="page-item">
+            <form class="page-information">
+                <button class="page-link" href="/phoneshop_web_war_exploded/productList"> Next </button>
+                <input type="hidden" name="page" value="${page + 1}">
+            </form>
+        </li>
+    </ul>
+</nav>
 </body>
 </html>
