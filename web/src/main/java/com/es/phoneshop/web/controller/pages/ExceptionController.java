@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-        @ExceptionHandler(NotFoundPhoneCustomException.class)
+        @ExceptionHandler({NotFoundPhoneCustomException.class})
         public ModelAndView handleException(NotFoundPhoneCustomException exception) {
             ModelAndView modelAndView = new ModelAndView("errorPages/notFoundPhone");
             modelAndView.addObject("errCode", exception.getErrCode());

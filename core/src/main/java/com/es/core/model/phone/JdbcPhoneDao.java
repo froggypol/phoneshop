@@ -15,13 +15,8 @@ import java.util.regex.Pattern;
 @PropertySource("classpath:properties/application.properties")
 public class JdbcPhoneDao implements PhoneDao {
 
-    private static final String PHONES_WITH_COLORS_QUERY = "select phones.id, phones.brand, phones.model, phones.price, phones.displaySizeInches, phones.imageUrl," +
-                                                           " phones.description, colors.code, phone2color.colorId " +
-                                                           "from phones " +
-                                                           "join phone2color on phones.id=phone2color.phoneId " +
-                                                           "join colors on phone2color.colorId=colors.id";
-
-    private static final String PHONES_WITH_COLORS_AND_LIMIT_OFFSET_QUERY = PHONES_WITH_COLORS_QUERY + "  limit ?  offset ?";
+    @Resource
+    PhoneQueryForDatabase phoneQueryForDatabase;
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -33,7 +28,7 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     private List<Phone> getPhoneListWithColors() {
-        return jdbcTemplate.query(PHONES_WITH_COLORS_QUERY, new PhoneExtractor());
+        return jdbcTemplate.query(phoneQueryForDatabase.getPhonesWithColorsQuery(), new PhoneExtractor());
     }
 
     public void save(final Phone phoneToSave) {
@@ -77,7 +72,7 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public List<Phone> findAll(int limit, int offset) {
-        return jdbcTemplate.query(PHONES_WITH_COLORS_AND_LIMIT_OFFSET_QUERY, new Object[]{limit, offset}, new PhoneExtractor());
+        return jdbcTemplate.query(phoneQueryForDatabase.getPhonesWithColorsAndLimitOffsetQuery(), new Object[]{limit, offset}, new PhoneExtractor());
     }
 
     public List<Phone> searchFor(String productName, String fieldToSort, String orderToSort) {

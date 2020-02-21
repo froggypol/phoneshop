@@ -11,6 +11,8 @@
 
     <import resource="classpath:context/appContext-configurer.xml"/>
 
+    <bean id="stockQueryForDatabase" class="com.es.core.model.phone.StockQueryForDatabase"/>
+
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${db.driver}" />
         <property name="url" value="${db.url}"/>
