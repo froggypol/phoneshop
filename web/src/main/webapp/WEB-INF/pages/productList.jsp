@@ -215,12 +215,11 @@
 
     $(document).ready(function () {
         $('.add').click(function () {
-            searchViaAjax();
+            addPhoneViaAjax();
         });
     });
 
-    function searchViaAjax() {
-
+    function addPhoneViaAjax() {
         var search = {}
         search["totalCost"] = ${sessionScope.get("cart").totalCost};
         search["totalQuantity"] = ${sessionScope.get("cart").totalQuantity};
