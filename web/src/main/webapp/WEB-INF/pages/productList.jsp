@@ -139,16 +139,14 @@
         </td>
         <td>${phoneItem.description}</td>
         <td>
-            <input value="${param.quantity}">
+            <input type="text" name="quantity" id="${phoneItem.id}">
         </td>
         <td>
-
-            <input type="submit" value="Add" class="add"/>
-            <form>
-                <input type="text" id="quantity" value="${param.quantity}"/>
-                <input type="hidden" id="productId" value="${phoneItem.id}"/>
-            </form>
-            <label typeof="text" style="text-decoration: darkred" id="error"/>
+            <input type="submit" onclick="addPhoneViaAjax(${phoneItem.id},  $('#${phoneItem.id}').val())" value="Add"
+                   class="add"/>
+            <div>
+                <a readonly name="error-message" class="error-message&${phoneItem.id}" style="color: crimson"/>
+            </div>
         </td>
     </tr>
 </c:forEach>
@@ -212,35 +210,34 @@
 </html>
 
 <script>
-
-    $(document).ready(function () {
-        $('.add').click(function () {
-            addPhoneViaAjax();
-        });
-    });
-
-    function addPhoneViaAjax() {
-        var search = {}
-        search["totalCost"] = ${sessionScope.get("cart").totalCost};
-        search["totalQuantity"] = ${sessionScope.get("cart").totalQuantity};
-        search["quantityToAdd"] = $("#quantity").val();
-        search["productId"] = $("#productId").val();
-
+    function addPhoneViaAjax(phoneId, quantity, errorMsg) {
+        var data = {}
+        data["totalCost"] = ${sessionScope.get("cart").totalCost};
+        data["totalQuantity"] = ${sessionScope.get("cart").totalQuantity};
+        data["quantityToAdd"] = quantity;
+        data["productId"] = phoneId;
+        data["msg"] = errorMsg;
         $.ajax({
             type: "POST",
             contentType: "application/json",
             url: "${pageContext.servletContext.contextPath}/ajaxCart",
-            data: JSON.stringify(search),
+            data: JSON.stringify(data),
             dataType: 'json',
             success: function (data) {
-                $("#error").text("");
+                var allMessages = document.getElementsByName('error-message');
+                allMessages.forEach(function (messageItem) {
+                    messageItem.innerHTML = "";
+                })
                 display(data);
             },
-            error: function () {
-                $("#error").text("Adding that product failed, reason is invalid quantity input");
+            error: function (res) {
+                var tbody = document.getElementsByClassName('error-message&' + phoneId)[0];
+                if (res.responseText === "")
+                    res.responseText = "No letters in quantity are allowed";
+                tbody.innerHTML = res.responseText;
+                document.createElement('div').innerHTML = tbody.innerHTML;
             }
         });
-
     }
 
     function display(data) {

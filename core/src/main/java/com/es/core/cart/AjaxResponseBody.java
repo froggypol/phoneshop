@@ -14,6 +14,26 @@ public class AjaxResponseBody {
 
     private BigDecimal quantityToAdd;
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public BigDecimal getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public BigDecimal getQuantityToAdd() {
+        return quantityToAdd;
+    }
+
     public void setMsg(String msg) {
         this.msg = msg;
     }

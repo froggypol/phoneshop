@@ -24,4 +24,19 @@ public class CartInfo {
         return quantityToAdd;
     }
 
+    public void setTotalQuantity(Long totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public void setQuantityToAdd(Long quantityToAdd) {
+        this.quantityToAdd = quantityToAdd;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 }

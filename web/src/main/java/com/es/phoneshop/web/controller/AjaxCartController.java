@@ -4,6 +4,8 @@ import com.es.core.cart.AjaxResponseBody;
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartInfo;
 import com.es.core.cart.CartService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ public class AjaxCartController {
     private CartService cartService;
 
     @RequestMapping(value = "/ajaxCart", method = RequestMethod.POST)
-    public AjaxResponseBody updateCartViaAjax(@Valid @RequestBody CartInfo cartInfo, BindingResult bindingResult, HttpSession session) {
+    public ResponseEntity updateCartViaAjax(@Valid @RequestBody CartInfo cartInfo, BindingResult bindingResult, HttpSession session) {
         AjaxResponseBody ajaxResponseBody = new AjaxResponseBody();
         if (!bindingResult.hasErrors()) {
             Cart cart = cartService.getCart(session);
@@ -38,9 +40,10 @@ public class AjaxCartController {
             ajaxResponseBody.setQuantityToAdd(BigDecimal.valueOf(cart.getTotalQuantity()));
             ajaxResponseBody.setTotalCost(cart.getTotalCost());
             ajaxResponseBody.setTotalQuantity(BigDecimal.valueOf(cart.getTotalQuantity()));
+            return new ResponseEntity<>(ajaxResponseBody, HttpStatus.OK);
         } else {
-            ajaxResponseBody.setMsg("Invalid format of quantity");
+            ajaxResponseBody.setMsg("Invalid quantity input");
+            return new ResponseEntity<String>(ajaxResponseBody.getMsg(), HttpStatus.BAD_REQUEST);
         }
-        return ajaxResponseBody;
     }
 }
