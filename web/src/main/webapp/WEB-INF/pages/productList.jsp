@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="tags" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
@@ -31,7 +32,7 @@
 </p>
 <p>
     Found
-    <c:out value="${phones.pageList.size()}"/> phones.
+    <c:out value="${phones.size()}"/> phones.
     <thead>
     <body>
     <table border="1px" class="product">
@@ -42,7 +43,7 @@
     <input name="query" value="${param.query}"/>
     <button>Search</button>
     <input type="hidden" name="order" value="desc">
-    <input type="hidden" name="fieldToSort" value="size">
+    <input type="hidden" name="fieldToSort" value="displaySizeInches">
     <input type="hidden" name="page" value="${page}">
 </form>
 </p>
@@ -101,14 +102,14 @@
             <button value="asc">asc</button>
             <input type="hidden" name="query" value="${param.query}">
             <input type="hidden" name="order" value="asc">
-            <input type="hidden" name="fieldToSort" value="size">
+            <input type="hidden" name="fieldToSort" value="displaySizeInches">
             <input type="hidden" name="page" value="${page}">
         </form>
         <form method="get">
             <button value="desc">desc</button>
             <input type="hidden" name="query" value="${param.query}">
             <input type="hidden" name="order" value="desc">
-            <input type="hidden" name="fieldToSort" value="size">
+            <input type="hidden" name="fieldToSort" value="displaySizeInches">
             <input type="hidden" name="page" value="${page}">
         </form>
     </td>
@@ -119,9 +120,7 @@
 </tr>
 </thead>
 
-<c:set var="pageListHolder" value="${phones}" scope="session"/>
-
-<c:forEach var="phoneItem" items="${pageListHolder.pageList}">
+<c:forEach var="phoneItem" items="${phones}">
     <tr class="productList">
         <td>
             <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phoneItem.imageUrl}">
@@ -165,7 +164,7 @@
                 <input type="hidden" name="page" value="${page-1}">
             </form>
         </li>
-        <c:if test="${(page + 9) < (pageListHolder.pageCount-1)}">
+        <c:if test="${(page + 9) < (maxPages-1)}">
             <c:forEach begin="${page-1}" end="${page+9}" varStatus="loop">
                 <li class="page-item">
                     <form style="display: inline-block"
@@ -180,8 +179,8 @@
                 </li>
             </c:forEach>
         </c:if>
-        <c:if test="${(page + 9) > (pageListHolder.pageCount-1)}">
-            <c:forEach begin="${page}" end="${pageListHolder.pageCount - 1}" varStatus="loop">
+        <c:if test="${(page + 9) > (maxPages - 1)}">
+            <c:forEach begin="${page}" end="${(maxPages - 1)}" varStatus="loop">
                 <li class="page-item">
                     <form href="/phoneshop_web_war_exploded/productList?query=${param.query}&order=${param.order}&fieldToSort=${param.fieldToSort}&page=${param.page}">
                         <button class="page-link">${loop.index+1}
