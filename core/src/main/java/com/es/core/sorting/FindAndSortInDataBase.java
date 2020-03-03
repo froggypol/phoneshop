@@ -17,10 +17,10 @@ public class FindAndSortInDataBase {
             "as tempPhone left join phone2color as p2c on tempPhone.id=p2c.phoneId " +
             "left join colors on p2c.colorId=colors.id ";
 
-    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_DESC_FIRST_PART = "select * from (select * from phones join stocks on stocks.phoneId=id where stocks.stock>0 " +
+    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART = "select * from (select * from phones join stocks on stocks.phoneId=id where stocks.stock>0 " +
             " and lower(phones.model) like (?) or lower(phones.description) like (?) order by ";
 
-    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_DESC_SECOND_PART =  " limit ? offset ? ) " +
+    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART =  " limit ? offset ? ) " +
             "as tempPhone left join phone2color as p2c on tempPhone.id=p2c.phoneId " +
             "left join colors on p2c.colorId=colors.id ";
 
@@ -46,54 +46,40 @@ public class FindAndSortInDataBase {
     }
 
     private List<PhoneModel> sortingOnSize(String order, int limit, int offset) {
-        if (order.equals("asc")) {
-            return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.displaySizeInches " + "asc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
-                    limit, offset);
-        }
-        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.displaySizeInches " + "desc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
+        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.displaySizeInches " + order + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
                 limit, offset);
     }
 
     private List<PhoneModel> sortingOnBrand(String order, int limit, int offset) {
-        if (order.equals("asc")) {
-            return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.brand " + "asc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
+            return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.brand " + order + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
                     limit, offset);
-        }
-        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.brand " + "desc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
-                limit, offset);
     }
 
     private List<PhoneModel> sortingOnModel(String order, int limit, int offset) {
-        if (order.equals("asc")) {
-            return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.model " + "asc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
-                    limit, offset);
-        }
-        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.model " + "desc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
+        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.model " + order + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
                 limit, offset);
     }
 
     private List<PhoneModel> sortingOnPrice(String order, int limit, int offset) {
-        if (order.equals("asc")) {
-            return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.price " + "asc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
-                    limit, offset);
-        }
-        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.price " + "desc" + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
+        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.price " + order + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
                 limit, offset);
     }
 
     public List<PhoneModel> findByAllParameters(ProductListPageParametersModel parametersModel) {
         String order = parametersModel.getOrderToSort();
         if (order.equals("desc")) {
-            return findByAllWordsInQuery(parametersModel, SEARCHING_PHONES_BY_ALL_PARAMS_NAME_DESC_FIRST_PART + " " + "phones.".concat(parametersModel.getFieldToSort()) +
-                    " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_DESC_SECOND_PART);
+            return findByAllWordsInQuery(parametersModel, SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART + " " +
+                    "phones.".concat(parametersModel.getFieldToSort()) +
+                    " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART);
         } else {
-            return findByAllWordsInQuery( parametersModel,SEARCHING_PHONES_BY_ALL_PARAMS_NAME_DESC_FIRST_PART + " " + "phones.".concat(parametersModel.getFieldToSort()) +
-                    " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_DESC_SECOND_PART);
+            return findByAllWordsInQuery( parametersModel,SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART + " "
+                    + "phones.".concat(parametersModel.getFieldToSort()) +
+                    " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART);
         }
     }
 
     public List<PhoneModel> findByAllWordsInQuery(ProductListPageParametersModel parametersModel, String queryForDataBase) {
-        List<String> queryItems = Arrays.asList(parametersModel.getPhoneNameQuery().split(" "));
+        List<String > queryItems = Arrays.asList(parametersModel.getPhoneNameQuery().split(" "));
         List<PhoneModel> phoneModels = new ArrayList<>();
         for (String query : queryItems){
             phoneModels.addAll(jdbcTempl.query(queryForDataBase, new Object[]{
