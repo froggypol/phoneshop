@@ -3,7 +3,6 @@ package com.es.core.service;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -20,16 +19,16 @@ public class PagingService {
 
     private int PHONES_ON_PAGE = 10;
 
-    private double COUNT_PAGES;
+    private int COUNT_PAGES;
 
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private static final String COUNT_PAGES_IN_SEARCHING_BY_QUERY = "select count(DISTINCT tableB.id) from (select tempPhone.id " +
-            "from (select * from phones join stocks on stocks.phoneId=id where stocks.stock>0 " +
-            "and lower(phones.model) like ? or lower(phones.description) like ?  )" +
-            "as tempPhone left join phone2color as p2c on tempPhone.id=p2c.phoneId " +
-            "left join colors on p2c.colorId=colors.id) as tableB";
+    private static final String COUNT_PAGES_IN_SEARCHING_BY_QUERY = "select count(resultTable.id) from (select phoneWithPriceStock.id " +
+            "from (select * from phones join stocks on stocks.phoneId=id )" +
+            "as phoneWithPriceStock join phone2color as p2c on phoneWithPriceStock.id=p2c.phoneId " +
+            "join colors on p2c.colorId=colors.id where ((lower(phoneWithPriceStock.model) like ? or lower(phoneWithPriceStock.description) like ?) " +
+            "and phoneWithPriceStock.price is not null and phoneWithPriceStock.stock > 0 )) as resultTable";
 
     public List<PhoneModel> listPages(ProductListPageParametersModel parametersModel, Model model, HttpSession session) {
         Integer page = parametersModel.getPage();
@@ -51,18 +50,23 @@ public class PagingService {
     }
 
     private int countPages(ProductListPageParametersModel parametersModel, HttpSession session) {
+        double counter = 0;
         int limit = PHONES_ON_PAGE;
         int offset = PHONES_ON_PAGE * (parametersModel.getPage() - 1);
+        String query = parametersModel.getPhoneNameQuery();
         parametersModel.setLimit(limit);
         parametersModel.setOffset(offset);
-        List<String> queryItems = Arrays.asList(parametersModel.getPhoneNameQuery().split(" "));
-        double counter = 0;
-        for (String query : queryItems) {
-            counter += jdbcTemplate.queryForObject(COUNT_PAGES_IN_SEARCHING_BY_QUERY, Double.class, new Object[]{
-                    "%" + query.toLowerCase() + "%", "%" + query.toLowerCase() + "%"});
+        List<String> queryItems = Arrays.asList(query.split(" "));
+        if (queryItems.size() == 0 ) {
+            counter = jdbcTemplate.queryForObject(COUNT_PAGES_IN_SEARCHING_BY_QUERY, Double.class, new Object[]{"%%", "%%"});
+        } else {
+            for (String qr : queryItems) {
+                counter += jdbcTemplate.queryForObject(COUNT_PAGES_IN_SEARCHING_BY_QUERY, Double.class, new Object[]{
+                        "%" + qr.toLowerCase() + "%", "%" + qr.toLowerCase() + "%"});
+            }
         }
         COUNT_PAGES = (int) Math.ceil(counter / PHONES_ON_PAGE);
         session.setAttribute("maxPages", COUNT_PAGES);
-        return (int) COUNT_PAGES;
+        return COUNT_PAGES;
     }
 }

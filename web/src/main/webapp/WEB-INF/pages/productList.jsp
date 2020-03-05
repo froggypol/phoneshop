@@ -27,6 +27,10 @@
     </form>
 </header>
 
+<form method="get" action="/cart" name="cartForm">
+    <input type="button" id="cartValue" value="Cart : ${cart.totalCost}"></input>
+</form>
+
 <p>
     Hello from product list!
 </p>
@@ -138,7 +142,7 @@
         </td>
         <td>${phoneItem.description}</td>
         <td>
-            <input type="text" name="quantity" id="${phoneItem.id}">
+            <input type="text" name="quantity" id="${phoneItem.id}" value="1">
         </td>
         <td>
             <input type="submit" onclick="addPhoneViaAjax(${phoneItem.id},  $('#${phoneItem.id}').val())" value="Add"
@@ -228,6 +232,7 @@
                     messageItem.innerHTML = "";
                 })
                 display(data);
+                $('#cartValue').val('Cart :' + data.totalCost + " $ ");
             },
             error: function (res) {
                 var tbody = document.getElementsByClassName('error-message&' + phoneId)[0];

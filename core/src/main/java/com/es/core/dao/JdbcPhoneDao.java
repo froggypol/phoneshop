@@ -17,10 +17,10 @@ import java.util.Optional;
 @PropertySource("classpath:properties/application.properties")
 public class JdbcPhoneDao implements PhoneDao {
 
-
     private static final String PHONES_WITH_COLORS_QUERY = "select * from phones join stocks on stocks.phoneId=phones.id " +
                                                            "left join phone2color on phones.id=phone2color.phoneId " +
-                                                           "left join colors on phone2color.colorId=colors.id where stocks.stock>0 ";
+                                                           "left join colors on phone2color.colorId=colors.id " +
+                                                           "where phones.price is not null and stocks.stock>0 ";
 
     @Resource
     private JdbcTemplate jdbcTemplate;

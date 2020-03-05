@@ -42,8 +42,10 @@ public class HttpSessionCartService implements CartService {
         CartItemModel checkedCartItem = new CartItemModel(quantity, phoneToAdd);
         if (cartItemList.contains(checkedCartItem)) {
             CartItemModel addedCartItem = cartItemList.get(cartItemList.indexOf(checkedCartItem));
-            cart.updateCart(addedCartItem, cartItem);
-        } else if (quantity <= phoneToAdd.getStock()) {
+            if (quantity <= phoneToAdd.getStock() - addedCartItem.getQuantity()){
+                cart.addToCart(cartItem);
+            }
+        } else if (!cartItemList.contains(checkedCartItem) && quantity <= phoneToAdd.getStock()) {
             cart.addToCart(cartItem);
         } else {
             throw new OutOfStockException();

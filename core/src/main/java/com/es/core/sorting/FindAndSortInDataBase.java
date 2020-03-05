@@ -1,4 +1,5 @@
 package com.es.core.sorting;
+
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
 import com.es.core.model.extractor.PhoneExtractor;
@@ -11,17 +12,18 @@ import java.util.List;
 
 public class FindAndSortInDataBase {
 
-    private static final String PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART = "select * from (select * from phones join stocks on stocks.phoneId=id where stocks.stock>0 order by ";
+    private static final String PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART = "select * from (select * from phones join stocks on stocks.phoneId=id where " +
+            "phones.price is not null and stocks.stock > 0 order by ";
 
-    private static final String PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART = " limit ? offset ? ) " +
-            "as tempPhone left join phone2color as p2c on tempPhone.id=p2c.phoneId " +
-            "left join colors on p2c.colorId=colors.id ";
+    private static final String PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART = " limit ? offset ? ) as phoneWithPriceStock " +
+            "left join phone2color as p2c on phoneWithPriceStock.id=p2c.phoneId " +
+            "left join colors on p2c.colorId=colors.id" ;
 
-    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART = "select * from (select * from phones join stocks on stocks.phoneId=id where stocks.stock>0 " +
-            " and lower(phones.model) like (?) or lower(phones.description) like (?) order by ";
+    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART = "select * from (select * from phones join stocks on stocks.phoneId=id where " +
+            " (phones.price is not null and stocks.stock > 0 and ((lower(phones.model) like ? or lower(phones.description) like ?))) order by ";
 
-    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART =  " limit ? offset ? ) " +
-            "as tempPhone left join phone2color as p2c on tempPhone.id=p2c.phoneId " +
+    private static String SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART =  " limit ? offset ? ) as phoneWithPriceStock " +
+            "left join phone2color as p2c on phoneWithPriceStock.id=p2c.phoneId " +
             "left join colors on p2c.colorId=colors.id ";
 
     private JdbcTemplate jdbcTempl;
@@ -41,7 +43,7 @@ public class FindAndSortInDataBase {
                                 sortingOnPrice(orderToSort, limit, offset);
     }
 
-    private List<PhoneModel> resultsOfSorting(String query,int limit, int offset) {
+    private List<PhoneModel> resultsOfSorting(String query, int limit, int offset) {
         return jdbcTempl.query(query, new Object[]{limit, offset}, new PhoneExtractor());
     }
 
@@ -51,8 +53,8 @@ public class FindAndSortInDataBase {
     }
 
     private List<PhoneModel> sortingOnBrand(String order, int limit, int offset) {
-            return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.brand " + order + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
-                    limit, offset);
+        return resultsOfSorting(PHONES_SORTED_BY_FIELD_AND_ORDER_FIRST_PART + "phones.brand " + order + PHONES_SORTED_BY_FIELD_AND_ORDER_SECOND_PART,
+                limit, offset);
     }
 
     private List<PhoneModel> sortingOnModel(String order, int limit, int offset) {
@@ -67,25 +69,29 @@ public class FindAndSortInDataBase {
 
     public List<PhoneModel> findByAllParameters(ProductListPageParametersModel parametersModel) {
         String order = parametersModel.getOrderToSort();
-        if (order.equals("desc")) {
-            return findByAllWordsInQuery(parametersModel, SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART + " " +
-                    "phones.".concat(parametersModel.getFieldToSort()) +
-                    " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART);
-        } else {
-            return findByAllWordsInQuery( parametersModel,SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART + " "
-                    + "phones.".concat(parametersModel.getFieldToSort()) +
-                    " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART);
-        }
+        String field = parametersModel.getFieldToSort();
+        return findByAllWordsInQuery(parametersModel, SEARCHING_PHONES_BY_ALL_PARAMS_NAME_FIRST_PART + " "
+                + "phones.".concat(field) + " " + order + SEARCHING_PHONES_BY_ALL_PARAMS_NAME_SECOND_PART);
     }
 
     public List<PhoneModel> findByAllWordsInQuery(ProductListPageParametersModel parametersModel, String queryForDataBase) {
-        List<String > queryItems = Arrays.asList(parametersModel.getPhoneNameQuery().split(" "));
+        List<String> queryItems = Arrays.asList(parametersModel.getPhoneNameQuery().split(" "));
         List<PhoneModel> phoneModels = new ArrayList<>();
-        for (String query : queryItems){
-            phoneModels.addAll(jdbcTempl.query(queryForDataBase, new Object[]{
-                    "%"+query.toLowerCase()+"%", "%"+query.toLowerCase()+"%",
-                    parametersModel.getLimit(), parametersModel.getOffset()}, new PhoneExtractor()));
+        if(queryItems.size() == 0) {
+            phoneModels.addAll(jdbcTempl.query(queryForDataBase, new Object[]{"%%", "%%", parametersModel.getLimit(), parametersModel.getOffset()},
+                    new PhoneExtractor()));
+        } else {
+            for (String query : queryItems) {
+                phoneModels.addAll(jdbcTempl.query(queryForDataBase, new Object[]{
+                                "%" + query.toLowerCase() + "%", "%" + query.toLowerCase() + "%", parametersModel.getLimit(), parametersModel.getOffset()},
+                        new PhoneExtractor()));
+            }
         }
         return phoneModels;
+    }
+
+    @Autowired
+    public void setJdbcTempl(JdbcTemplate jdbcTempl) {
+        this.jdbcTempl = jdbcTempl;
     }
 }
