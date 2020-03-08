@@ -1,8 +1,8 @@
-package com.es.core.ajax.response;
+package com.es.core.response;
 
 import java.math.BigDecimal;
 
-public class AjaxResponseBody {
+public class AddToCartResponseBody {
 
     private String msg;
 

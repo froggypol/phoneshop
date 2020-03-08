@@ -1,10 +1,10 @@
-package com.es.core.DTO;
+package com.es.core.form;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class CartInfoDTO {
+public class AddingToCartForm {
 
     private Long totalQuantity;
 

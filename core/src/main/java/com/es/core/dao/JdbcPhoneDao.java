@@ -1,6 +1,6 @@
 package com.es.core.dao;
 
-import com.es.core.sorting.FindAndSortInDataBase;
+import com.es.core.dao.sorting.FindAndSortDataBase;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ColorModel;
 import com.es.core.model.extractor.PhoneExtractor;
@@ -81,7 +81,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<PhoneModel> searchFor(ProductListPageParametersModel parametersModel) {
         List<PhoneModel> phoneList;
-        FindAndSortInDataBase sortInDataBase = new FindAndSortInDataBase(jdbcTemplate);
+        FindAndSortDataBase sortInDataBase = new FindAndSortDataBase(jdbcTemplate);
         if (parametersModel == null) {
             return getPhoneListWithColors();
         } else if (parametersModel.allParametersFilled()) {
@@ -96,7 +96,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<PhoneModel> searchForPhonesByNameQuery(ProductListPageParametersModel parametersModel) {
         String phoneNameQuery = parametersModel.getPhoneNameQuery();
-        FindAndSortInDataBase sortInDataBase = new FindAndSortInDataBase(jdbcTemplate);
+        FindAndSortDataBase sortInDataBase = new FindAndSortDataBase(jdbcTemplate);
         return sortInDataBase.findByAllWordsInQuery(parametersModel, phoneNameQuery);
     }
 

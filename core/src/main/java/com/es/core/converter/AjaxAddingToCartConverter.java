@@ -1,24 +1,24 @@
 package com.es.core.converter;
 
-import com.es.core.form.AjaxAddingToCartForm;
-import com.es.core.model.AjaxAddingToCartModel;
-import com.es.core.populator.impl.AjaxAddingToCartDataPopulator;
+import com.es.core.form.AddingToCartForm;
+import com.es.core.model.AddingToCartModel;
+import com.es.core.populator.impl.AddingToCartDataPopulator;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.List;
 
-public class AjaxAddingToCartConverter implements Converter<AjaxAddingToCartForm, AjaxAddingToCartModel> {
+public class AjaxAddingToCartConverter implements Converter<AddingToCartForm, AddingToCartModel> {
 
-    private List<AjaxAddingToCartDataPopulator> ajaxAddingToCartDataPopulators;
+    private List<AddingToCartDataPopulator> populators;
 
     @Override
-    public AjaxAddingToCartModel convert(AjaxAddingToCartForm ajaxAddingToCartForm) {
-        AjaxAddingToCartModel model = new AjaxAddingToCartModel();
-        ajaxAddingToCartDataPopulators.stream().forEach(populator -> populator.populate(ajaxAddingToCartForm, model));
+    public AddingToCartModel convert(AddingToCartForm ajaxAddingToCartForm) {
+        AddingToCartModel model = new AddingToCartModel();
+        populators.forEach(populator -> populator.populate(ajaxAddingToCartForm, model));
         return model;
     }
 
-    public void setAjaxAddingToCartDataPopulators(List<AjaxAddingToCartDataPopulator> ajaxAddingToCartDataPopulators) {
-        this.ajaxAddingToCartDataPopulators = ajaxAddingToCartDataPopulators;
+    public void setAjaxAddingToCartDataPopulators(List<AddingToCartDataPopulator> ajaxAddingToCartDataPopulators) {
+        this.populators = ajaxAddingToCartDataPopulators;
     }
 }

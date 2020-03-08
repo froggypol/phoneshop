@@ -8,27 +8,27 @@ import java.util.List;
 
 public class CartModel {
 
-    private List<CartItemModel> cartItemList;
+    private List<CartItemModel> cartItems;
 
     private Long totalQuantity;
 
     private BigDecimal totalCost;
 
     public CartModel() {
-        cartItemList = new ArrayList<>();
+        cartItems = new ArrayList<>();
         totalCost = BigDecimal.ZERO;
         totalQuantity = 0L;
     }
 
-    public List<CartItemModel> getCartItemList() {
-        if (cartItemList == null) {
-            cartItemList = new ArrayList<>();
+    public List<CartItemModel> getcartItems() {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
         }
-        return cartItemList;
+        return cartItems;
     }
 
     public void addToCart(CartItemModel cartItem) {
-        cartItemList.add(cartItem);
+        cartItems.add(cartItem);
         recalculateBalance();
     }
 
@@ -40,13 +40,13 @@ public class CartModel {
     }
 
     public Long countQuantity() {
-        return getCartItemList().stream()
+        return getcartItems().stream()
                 .mapToLong(CartItemModel::getQuantity)
                 .sum();
     }
 
     public BigDecimal countCost() {
-        return getCartItemList().stream()
+        return getcartItems().stream()
                 .reduce(BigDecimal.ZERO,
                         ((bigDecimal, cartItem) -> {
                             BigDecimal totalCost = cartItem.getPhone().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
@@ -57,11 +57,19 @@ public class CartModel {
     public void updateCart(CartItemModel addedCartItem, CartItemModel cartItemToAdd) {
         if (cartItemToAdd.getQuantity() <= addedCartItem.getPhone().getStock() - addedCartItem.getQuantity()) {
             addedCartItem.setQuantity(cartItemToAdd.getQuantity());
-            cartItemList.set(cartItemList.indexOf(addedCartItem), addedCartItem);
+            cartItems.set(cartItems.indexOf(addedCartItem), addedCartItem);
             recalculateBalance();
         } else {
             throw new OutOfStockException();
         }
+    }
+
+    public List<CartItemModel> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItemModel> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public void setTotalQuantity(Long totalQuantity) {

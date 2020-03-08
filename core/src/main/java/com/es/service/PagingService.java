@@ -1,4 +1,4 @@
-package com.es.core.service;
+package com.es.service;
 
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
@@ -15,6 +15,9 @@ import java.util.List;
 public class PagingService {
 
     @Resource
+    private HttpSession httpSession;
+
+    @Resource
     private PhoneService phoneService;
 
     private int PHONES_ON_PAGE = 10;
@@ -24,7 +27,7 @@ public class PagingService {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private static final String COUNT_PAGES_IN_SEARCHING_BY_QUERY = "select count(resultTable.id) from (select phoneWithPriceStock.id " +
+    private static final String COUNT_PAGES_IN_SEARCHING_BY_QUERY = "select count(distinct resultTable.id) from (select phoneWithPriceStock.id " +
             "from (select * from phones join stocks on stocks.phoneId=id )" +
             "as phoneWithPriceStock join phone2color as p2c on phoneWithPriceStock.id=p2c.phoneId " +
             "join colors on p2c.colorId=colors.id where ((lower(phoneWithPriceStock.model) like ? or lower(phoneWithPriceStock.description) like ?) " +
@@ -33,7 +36,7 @@ public class PagingService {
     public List<PhoneModel> listPages(ProductListPageParametersModel parametersModel, Model model, HttpSession session) {
         Integer page = parametersModel.getPage();
         List<PhoneModel> phoneList;
-        COUNT_PAGES = countPages(parametersModel, session);
+        COUNT_PAGES = countPages(parametersModel);
         if (page > 0 && page < COUNT_PAGES) {
             session.setAttribute("page", page);
         }
@@ -49,7 +52,7 @@ public class PagingService {
         return phoneList;
     }
 
-    private int countPages(ProductListPageParametersModel parametersModel, HttpSession session) {
+    private int countPages(ProductListPageParametersModel parametersModel) {
         double counter = 0;
         int limit = PHONES_ON_PAGE;
         int offset = PHONES_ON_PAGE * (parametersModel.getPage() - 1);
@@ -66,7 +69,7 @@ public class PagingService {
             }
         }
         COUNT_PAGES = (int) Math.ceil(counter / PHONES_ON_PAGE);
-        session.setAttribute("maxPages", COUNT_PAGES);
+        httpSession.setAttribute("maxPages", COUNT_PAGES);
         return COUNT_PAGES;
     }
 }

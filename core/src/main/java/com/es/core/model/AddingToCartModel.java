@@ -1,12 +1,12 @@
 package com.es.core.model;
 
-public class AjaxAddingToCartModel {
+public class AddingToCartModel {
 
     private Long idOfAddingPhone;
 
     private Long quantityToAdd;
 
-    public AjaxAddingToCartModel() {
+    public AddingToCartModel() {
         this.idOfAddingPhone = 1L;
         this.quantityToAdd = 1L;
     }

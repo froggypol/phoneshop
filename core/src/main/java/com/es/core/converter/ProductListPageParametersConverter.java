@@ -9,20 +9,20 @@ import java.util.List;
 
 public class ProductListPageParametersConverter implements Converter<ProductListPageForm, ProductListPageParametersModel> {
 
-    private List<ProductListPageParametersModelPopulator> paramPopulators;
+    private List<ProductListPageParametersModelPopulator> populators;
 
     @Override
     public ProductListPageParametersModel convert(ProductListPageForm pageForm) {
         ProductListPageParametersModel parametersModel = new ProductListPageParametersModel();
-        paramPopulators.stream().forEach(populator -> populator.populate(pageForm, parametersModel));
+        populators.forEach(populator -> populator.populate(pageForm, parametersModel));
         return parametersModel;
     }
 
     public List<ProductListPageParametersModelPopulator> getParamPopulators() {
-        return paramPopulators;
+        return populators;
     }
 
     public void setParamPopulators(List<ProductListPageParametersModelPopulator> paramPopulators) {
-        this.paramPopulators = paramPopulators;
+        this.populators = paramPopulators;
     }
 }

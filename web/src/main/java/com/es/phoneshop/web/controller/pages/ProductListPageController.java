@@ -3,7 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
-import com.es.core.facade.JdbcPhoneDaoFacade;
+import com.es.facade.JdbcPhoneDaoFacade;
 import com.es.core.form.ProductListPageForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

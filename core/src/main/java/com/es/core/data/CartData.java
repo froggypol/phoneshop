@@ -8,20 +8,20 @@ import java.util.List;
 
 public class CartData {
 
-    private List<CartItemModel> cartItemList;
+    private List<CartItemModel> cartItems;
 
     private Long totalQuantity;
 
     private BigDecimal totalCost;
 
     public CartData() {
-        cartItemList = new ArrayList<>();
+        cartItems = new ArrayList<>();
         totalCost = BigDecimal.ZERO;
         totalQuantity = 0L;
     }
 
-    public List<CartItemModel> getCartItemList() {
-        return cartItemList;
+    public List<CartItemModel> getCartItems() {
+        return cartItems;
     }
 
     public Long getTotalQuantity() {
@@ -32,8 +32,8 @@ public class CartData {
         return totalCost;
     }
 
-    public void setCartItemList(List<CartItemModel> cartItemList) {
-        this.cartItemList = cartItemList;
+    public void setCartItems(List<CartItemModel> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public void setTotalQuantity(Long totalQuantity) {

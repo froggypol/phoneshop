@@ -9,20 +9,20 @@ import java.util.List;
 
 public class CartDataConverter implements Converter<CartModel, CartData> {
 
-    private List<Populator<CartModel, CartData>> cartPopulators;
+    private List<Populator<CartModel, CartData>> populators;
 
     @Override
     public CartData convert(CartModel cart) {
         CartData cartData = new CartData();
-        cartPopulators.stream().forEach(populator -> populator.populate(cart, cartData));
+        populators.forEach(populator -> populator.populate(cart, cartData));
         return cartData;
     }
 
     public List<Populator<CartModel, CartData>> getCartPopulators() {
-        return cartPopulators;
+        return populators;
     }
 
     public void setCartPopulators(List<Populator<CartModel, CartData>> cartPopulators) {
-        this.cartPopulators = cartPopulators;
+        this.populators = cartPopulators;
     }
 }

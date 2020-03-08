@@ -1,9 +1,9 @@
-package com.es.core.service;
+package com.es.service;
 
 import com.es.core.model.CartItemModel;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.data.PhoneData;
-import com.es.core.model.AjaxAddingToCartModel;
+import com.es.core.model.AddingToCartModel;
 import com.es.core.model.CartModel;
 import com.es.core.model.PhoneModel;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,25 +20,28 @@ public class HttpSessionCartService implements CartService {
     public static String UPDATE_RESERVED_COUNTER_IN_STOCK = "update stocks set (reserved) = (?)";
 
     @Resource
+    private HttpSession httpSession;
+
+    @Resource
     private PhoneService phoneService;
 
     @Resource
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public CartModel getCart(HttpSession session) {
-        CartModel cart = (CartModel) session.getAttribute("cart");
+    public CartModel getCart() {
+        CartModel cart = (CartModel) httpSession.getAttribute("cart");
         return cart;
     }
 
     @Override
-    public void addPhone(AjaxAddingToCartModel ajaxAddingToCartModel, HttpSession httpSession) throws OutOfStockException {
+    public void addPhone(AddingToCartModel ajaxAddingToCartModel) throws OutOfStockException {
         Long quantity = ajaxAddingToCartModel.getQuantityToAdd();
         Long phoneId = ajaxAddingToCartModel.getIdOfAddingPhone();
         CartItemModel cartItem = new CartItemModel(quantity, phoneService.get(phoneId));
         PhoneModel phoneToAdd = phoneService.get(phoneId);
-        CartModel cart = getCart(httpSession);
-        List<CartItemModel> cartItemList = cart.getCartItemList();
+        CartModel cart = getCart();
+        List<CartItemModel> cartItemList = cart.getCartItems();
         CartItemModel checkedCartItem = new CartItemModel(quantity, phoneToAdd);
         if (cartItemList.contains(checkedCartItem)) {
             CartItemModel addedCartItem = cartItemList.get(cartItemList.indexOf(checkedCartItem));

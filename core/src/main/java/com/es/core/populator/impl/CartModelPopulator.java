@@ -10,6 +10,6 @@ public class CartModelPopulator implements Populator<CartModel, CartData> {
     public void populate(CartModel source, CartData target) {
         target.setTotalCost(source.getTotalCost());
         target.setTotalQuantity(source.getTotalQuantity());
-        target.setCartItemList(source.getCartItemList());
+        target.setCartItems(source.getCartItems());
     }
 }
