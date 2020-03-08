@@ -1,10 +1,10 @@
 package com.es.core.dao;
 
-import com.es.core.dao.sorting.FindAndSortDataBase;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ColorModel;
 import com.es.core.model.extractor.PhoneExtractor;
 import com.es.core.model.ProductListPageParametersModel;
+import com.es.core.util.FindAndSortUtil;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -81,23 +81,23 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public List<PhoneModel> searchFor(ProductListPageParametersModel parametersModel) {
         List<PhoneModel> phoneList;
-        FindAndSortDataBase sortInDataBase = new FindAndSortDataBase(jdbcTemplate);
+        FindAndSortUtil findAndSortUtil = new FindAndSortUtil(jdbcTemplate);
         if (parametersModel == null) {
             return getPhoneListWithColors();
         } else if (parametersModel.allParametersFilled()) {
-            return sortInDataBase.findByAllParameters(parametersModel);
+            return findAndSortUtil.findByAllParameters(parametersModel);
         } else if (!parametersModel.emptyQuery()) {
             return searchForPhonesByNameQuery(parametersModel);
         }
-        phoneList = sortInDataBase.sortProductsList(parametersModel.getFieldToSort(), parametersModel.getOrderToSort(), parametersModel.getLimit(),
+        phoneList = findAndSortUtil.sortProductsList(parametersModel.getFieldToSort(), parametersModel.getOrderToSort(), parametersModel.getLimit(),
                 parametersModel.getOffset());
         return phoneList;
     }
 
     public List<PhoneModel> searchForPhonesByNameQuery(ProductListPageParametersModel parametersModel) {
         String phoneNameQuery = parametersModel.getPhoneNameQuery();
-        FindAndSortDataBase sortInDataBase = new FindAndSortDataBase(jdbcTemplate);
-        return sortInDataBase.findByAllWordsInQuery(parametersModel, phoneNameQuery);
+        FindAndSortUtil findAndSortUtil = new FindAndSortUtil(jdbcTemplate);
+        return findAndSortUtil.findByAllWordsInQuery(parametersModel, phoneNameQuery);
     }
 
 }

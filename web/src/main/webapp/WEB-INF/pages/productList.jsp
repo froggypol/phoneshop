@@ -7,7 +7,6 @@
 
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
@@ -37,122 +36,127 @@
 <p>
     Found
     <c:out value="${phones.size()}"/> phones.
-    <thead>
+
     <body>
-    <table border="1px" class="product">
-        <thead>
 <p>
-<form method="get"
-      href="/phoneshop_web_war_exploded/productList?query=${param.query}&order=desc&fieldToSort=model&page=${page}">
-    <input name="query" value="${param.query}"/>
-    <button>Search</button>
+<form method="get" href="/phoneshop_web_war_exploded/productList?query=${param.query}&order=desc&fieldToSort=model&page=${page}">
+    <div class="col-2">
+        <input type="text" class="form-control" placeholder="Query" name="query" value="${param.query}">
+        <button class="btn btn-outline-success">Search</button>
+    </div>
     <input type="hidden" name="order" value="desc">
     <input type="hidden" name="fieldToSort" value="displaySizeInches">
     <input type="hidden" name="page" value="${page}">
 </form>
 </p>
-<tr>
-    <td>Image</td>
-    <td>Brand
-        <form method="get">
-            <button value="asc">asc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="asc">
-            <input type="hidden" name="fieldToSort" value="brand">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-        <form method="get">
-            <button value="desc">desc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="desc">
-            <input type="hidden" name="fieldToSort" value="brand">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-    </td>
-    <td>Model
-        <form method="get">
-            <button value="asc">asc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="asc">
-            <input type="hidden" name="fieldToSort" value="model">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-        <form method="get">
-            <button value="desc">desc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="desc">
-            <input type="hidden" name="fieldToSort" value="model">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-    </td>
-    <td>Price
-        <form method="get">
-            <button value="asc">asc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="asc">
-            <input type="hidden" name="fieldToSort" value="price">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-        <form method="get">
-            <button value="desc">desc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="desc">
-            <input type="hidden" name="fieldToSort" value="price">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-    </td>
-    <td>Display Size Inches
-        <form method="get">
-            <button value="asc">asc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="asc">
-            <input type="hidden" name="fieldToSort" value="displaySizeInches">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-        <form method="get">
-            <button value="desc">desc</button>
-            <input type="hidden" name="query" value="${param.query}">
-            <input type="hidden" name="order" value="desc">
-            <input type="hidden" name="fieldToSort" value="displaySizeInches">
-            <input type="hidden" name="page" value="${page}">
-        </form>
-    </td>
-    <td>Color</td>
-    <td>Description</td>
-    <td>Quantity</td>
-    <td>Action</td>
-</tr>
-</thead>
 
-<c:forEach var="phoneItem" items="${phones}">
-    <tr class="productList">
-        <td>
-            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phoneItem.imageUrl}">
-        </td>
-        <td>${phoneItem.brand}</td>
-        <td>${phoneItem.model}</td>
-        <td>$ ${phoneItem.price}</td>
-        <td>${phoneItem.displaySizeInches}</td>
-        <td>
-            <c:forEach items="${phoneItem.colors}" var="colorItem">
-                <p>
-                        ${colorItem.code}
-                </p>
-            </c:forEach>
-        </td>
-        <td>${phoneItem.description}</td>
-        <td>
-            <input type="text" name="quantity" id="${phoneItem.id}" value="1">
-        </td>
-        <td>
-            <input type="submit" onclick="addPhoneViaAjax(${phoneItem.id},  $('#${phoneItem.id}').val())" value="Add"
-                   class="add"/>
-            <div>
-                <a readonly name="error-message" class="error-message&${phoneItem.id}" style="color: crimson"/>
-            </div>
-        </td>
+<table class="table table-bordered">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col" style="text-orientation: upright">Image</th>
+        <th scope="col" style="width: 10rem;">Brand
+            <form method="get">
+                <button value="asc" class="btn btn-outline-danger">asc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="asc">
+                <input type="hidden" name="fieldToSort" value="brand">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+            <form method="get">
+                <button value="desc" class="btn btn-outline-warning">desc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="desc">
+                <input type="hidden" name="fieldToSort" value="brand">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+        </th>
+        <th scope="col" style="width: 10rem;">Model
+            <form method="get">
+                <button value="asc" class="btn btn-outline-danger">asc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="asc">
+                <input type="hidden" name="fieldToSort" value="model">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+            <form method="get">
+                <button value="desc" class="btn btn-outline-warning">desc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="desc">
+                <input type="hidden" name="fieldToSort" value="model">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+        </th>
+        <th scope="col" style="width: 10rem;">Price
+            <form method="get">
+                <button value="asc" class="btn btn-outline-danger">asc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="asc">
+                <input type="hidden" name="fieldToSort" value="price">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+            <form method="get">
+                <button value="desc" class="btn btn-outline-warning">desc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="desc">
+                <input type="hidden" name="fieldToSort" value="price">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+        </th>
+        <th scope="col" style="width: 20rem;">Display Size Inches
+            <form method="get">
+                <button value="asc" class="btn btn-outline-danger">asc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="asc">
+                <input type="hidden" name="fieldToSort" value="displaySizeInches">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+            <form method="get">
+                <button value="desc" class="btn btn-outline-warning">desc</button>
+                <input type="hidden" name="query" value="${param.query}">
+                <input type="hidden" name="order" value="desc">
+                <input type="hidden" name="fieldToSort" value="displaySizeInches">
+                <input type="hidden" name="page" value="${page}">
+            </form>
+        </th>
+        <th scope="col">Color</th>
+        <th scope="col">Description</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Action</th>
     </tr>
-</c:forEach>
+    </thead>
+
+    <c:forEach var="phoneItem" items="${phones}">
+        <tr class="productList">
+            <td>
+                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phoneItem.imageUrl}">
+            </td>
+            <td>${phoneItem.brand}</td>
+            <td>
+                <a href="${pageContext.servletContext.contextPath}/productDetailsPage/productId=${phoneItem.id}">${phoneItem.model}</a>
+                <input type="hidden" name="phoneId" value="${phoneItem.id}">
+            </td>
+            <td>$ ${phoneItem.price}</td>
+            <td>${phoneItem.displaySizeInches}</td>
+            <td>
+                <c:forEach items="${phoneItem.colors}" var="colorItem">
+                    <p>
+                            ${colorItem.code}
+                    </p>
+                </c:forEach>
+            </td>
+            <td>${phoneItem.description}</td>
+            <td>
+                <input type="text" name="quantity" id="${phoneItem.id}" value="1">
+            </td>
+            <td>
+                <input type="submit" onclick="addPhoneViaAjax(${phoneItem.id},  $('#${phoneItem.id}').val())" value="Add"
+                       class="add"/>
+                <div>
+                    <a readonly name="error-message" class="error-message&${phoneItem.id}" style="color: crimson"/>
+                </div>
+            </td>
+        </tr>
+    </c:forEach>
 </table>
 </p>
 
