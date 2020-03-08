@@ -3,7 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
-import com.es.facade.JdbcPhoneDaoFacade;
+import com.es.facade.ProductListFacade;
 import com.es.core.form.ProductListPageForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductListPageController {
 
     @Resource
-    private JdbcPhoneDaoFacade jdbcPhoneDaoFacade;
+    private ProductListFacade jdbcPhoneDaoFacade;
 
     @RequestMapping(method = RequestMethod.GET, value = "/productList")
     public String showProductList(@RequestParam(value = "query", required = false) String phoneNameQuery,

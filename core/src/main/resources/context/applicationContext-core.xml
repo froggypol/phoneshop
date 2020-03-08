@@ -11,7 +11,7 @@
 
     <import resource="classpath:context/appContext-configurer.xml"/>
 
-    <bean id="jdbcPhoneDaoFacade" class="com.es.facade.JdbcPhoneDaoFacade"/>
+    <bean id="jdbcPhoneDaoFacade" class="com.es.facade.ProductListFacade"/>
 
     <bean id="ajaxAddingToCartFacade" class="com.es.facade.AddingToCartFacade"/>
 

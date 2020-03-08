@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcPhoneDaoFacade {
+public class ProductListFacade {
 
     @Resource
     private PhoneDataConverter phoneDataConverter;
