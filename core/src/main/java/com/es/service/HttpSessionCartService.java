@@ -17,16 +17,11 @@ import java.util.Map;
 @Service
 public class HttpSessionCartService implements CartService {
 
-    public static String UPDATE_RESERVED_COUNTER_IN_STOCK = "update stocks set (reserved) = (?)";
-
     @Resource
     private HttpSession httpSession;
 
     @Resource
     private PhoneService phoneService;
-
-    @Resource
-    private JdbcTemplate jdbcTemplate;
 
     @Override
     public CartModel getCart() {
@@ -46,14 +41,13 @@ public class HttpSessionCartService implements CartService {
         if (cartItemList.contains(checkedCartItem)) {
             CartItemModel addedCartItem = cartItemList.get(cartItemList.indexOf(checkedCartItem));
             if (quantity <= phoneToAdd.getStock() - addedCartItem.getQuantity()){
-                cart.addToCart(cartItem);
+                cart.updateCart(cartItem, addedCartItem);
             }
         } else if (!cartItemList.contains(checkedCartItem) && quantity <= phoneToAdd.getStock()) {
             cart.addToCart(cartItem);
         } else {
             throw new OutOfStockException();
         }
-        jdbcTemplate.update(UPDATE_RESERVED_COUNTER_IN_STOCK, cartItem.getQuantity());
     }
 
     @Override

@@ -19,8 +19,8 @@ public class AddToCartController {
     @Resource
     private AddingToCartFacade ajaxAddingToCartFacade;
 
-    @RequestMapping(value = "/ajaxCart", method = RequestMethod.POST)
-    public ResponseEntity updateCartViaAjax(@Valid @RequestBody AddingToCartForm cartForm, BindingResult bindingResult) throws OutOfStockException {
+    @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
+    public ResponseEntity updateCartViaAjax(@RequestBody @Valid AddingToCartForm cartForm, BindingResult bindingResult) throws OutOfStockException {
         return bindingResult.hasErrors() ?
                 ajaxAddingToCartFacade.updatingInvalidInput() :
                 ajaxAddingToCartFacade.updateCartViaAjax(cartForm);

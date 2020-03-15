@@ -25,9 +25,9 @@ public class ProductListFacade {
     @Resource
     private PagingService service;
 
-    public String showProductList(ProductListPageForm pageForm, Model model, HttpSession session) {
+    public String showProductList(ProductListPageForm pageForm, Model model) {
         ProductListPageParametersModel parametersModel = parametersConverter.convert(pageForm);
-        List<PhoneModel> phoneListModel = service.listPages(parametersModel, model, session);
+        List<PhoneModel> phoneListModel = service.listPages(parametersModel, model);
         List<PhoneData> phoneListData = new ArrayList<>();
         phoneListModel.stream().forEach(phoneModel -> phoneListData.add(phoneDataConverter.convert(phoneModel)));
         model.addAttribute("phones", phoneListData);

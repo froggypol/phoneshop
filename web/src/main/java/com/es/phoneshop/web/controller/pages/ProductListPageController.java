@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductListPageController {
 
     @Resource
-    private ProductListFacade jdbcPhoneDaoFacade;
+    private ProductListFacade phoneDaoFacade;
 
     @RequestMapping(method = RequestMethod.GET, value = "/productList")
     public String showProductList(@RequestParam(value = "query", required = false) String phoneNameQuery,
                                   @RequestParam(value = "order", required = false, defaultValue = "asc") String orderToSort,
                                   @RequestParam(value = "fieldToSort", required = false, defaultValue = "brand") String fieldToSort,
                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                  Model model, HttpSession session) {
+                                  Model model) {
         ProductListPageForm productListPageForm = new ProductListPageForm(phoneNameQuery, fieldToSort, orderToSort, page);
-        return jdbcPhoneDaoFacade.showProductList(productListPageForm, model, session);
+        return phoneDaoFacade.showProductList(productListPageForm, model);
     }
 }

@@ -1,7 +1,7 @@
 package com.es.facade;
 
 import com.es.core.response.AddToCartResponseBody;
-import com.es.core.converter.AjaxAddingToCartConverter;
+import com.es.core.converter.AddingToCartConverter;
 import com.es.core.form.AddingToCartForm;
 import com.es.core.model.AddingToCartModel;
 import com.es.core.model.CartModel;
@@ -19,11 +19,11 @@ public class AddingToCartFacade {
     private CartService cartService;
 
     @Resource
-    private AjaxAddingToCartConverter ajaxAddingToCartConverter;
+    private AddingToCartConverter addingToCartConverter;
 
     public ResponseEntity updateCartViaAjax(AddingToCartForm cartForm) throws OutOfStockException {
         AddToCartResponseBody ajaxResponseBody = new AddToCartResponseBody();
-        AddingToCartModel ajaxAddingToCartModel = ajaxAddingToCartConverter.convert(cartForm);
+        AddingToCartModel ajaxAddingToCartModel = addingToCartConverter.convert(cartForm);
         CartModel cartModel = cartService.getCart();
 
         cartService.addPhone(ajaxAddingToCartModel);

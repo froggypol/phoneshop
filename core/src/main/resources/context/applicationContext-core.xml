@@ -49,7 +49,7 @@
 
     <bean id="ajaxAddingToCartDataPopulator" class="com.es.core.populator.impl.AddingToCartDataPopulator"/>
 
-    <bean id="ajaxAddingToCartConverter" class="com.es.core.converter.AjaxAddingToCartConverter">
+    <bean id="ajaxAddingToCartConverter" class="com.es.core.converter.AddingToCartConverter">
         <property name="ajaxAddingToCartDataPopulators">
             <list>
                 <ref bean="ajaxAddingToCartDataPopulator"/>

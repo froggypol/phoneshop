@@ -227,7 +227,7 @@
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "${pageContext.servletContext.contextPath}/ajaxCart",
+            url: "${pageContext.servletContext.contextPath}/addToCart",
             data: JSON.stringify(data),
             dataType: 'json',
             success: function (data) {

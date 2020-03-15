@@ -56,7 +56,7 @@ public class CartModel {
 
     public void updateCart(CartItemModel addedCartItem, CartItemModel cartItemToAdd) {
         if (cartItemToAdd.getQuantity() <= addedCartItem.getPhone().getStock() - addedCartItem.getQuantity()) {
-            addedCartItem.setQuantity(cartItemToAdd.getQuantity());
+            addedCartItem.setQuantity(cartItemToAdd.getQuantity() + cartItemToAdd.getQuantity());
             cartItems.set(cartItems.indexOf(addedCartItem), addedCartItem);
             recalculateBalance();
         } else {
