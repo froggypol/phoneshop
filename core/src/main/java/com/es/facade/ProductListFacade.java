@@ -6,11 +6,10 @@ import com.es.core.form.ProductListPageForm;
 import com.es.core.data.PhoneData;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
-import com.es.service.PagingService;
+import com.es.service.PaginationService;
 import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class ProductListFacade {
     private ProductListPageParametersConverter parametersConverter;
 
     @Resource
-    private PagingService service;
+    private PaginationService service;
 
     public String showProductList(ProductListPageForm pageForm, Model model) {
         ProductListPageParametersModel parametersModel = parametersConverter.convert(pageForm);

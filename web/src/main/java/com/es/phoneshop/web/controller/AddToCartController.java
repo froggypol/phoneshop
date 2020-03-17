@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.controller;
 
+import com.es.core.dto.CartInfoDTO;
 import com.es.facade.AddingToCartFacade;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.form.AddingToCartForm;
@@ -17,12 +18,12 @@ import javax.validation.Valid;
 public class AddToCartController {
 
     @Resource
-    private AddingToCartFacade ajaxAddingToCartFacade;
+    private AddingToCartFacade addingToCartFacade;
 
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
-    public ResponseEntity updateCartViaAjax(@RequestBody @Valid AddingToCartForm cartForm, BindingResult bindingResult) throws OutOfStockException {
+    public ResponseEntity updateCartViaAjax(@RequestBody @Valid CartInfoDTO cartInfo, BindingResult bindingResult) throws OutOfStockException {
         return bindingResult.hasErrors() ?
-                ajaxAddingToCartFacade.updatingInvalidInput() :
-                ajaxAddingToCartFacade.updateCartViaAjax(cartForm);
+                addingToCartFacade.updatingInvalidInput(bindingResult) :
+                addingToCartFacade.updateCart(cartInfo);
     }
 }

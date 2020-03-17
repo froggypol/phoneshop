@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
-public class PagingService {
+public class PaginationService {
 
     @Resource
     private HttpSession httpSession;

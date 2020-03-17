@@ -16,6 +16,14 @@ public class AddingToCartForm {
 
     private Long productId;
 
+    public AddingToCartForm() {
+    }
+
+    public AddingToCartForm(Long quantityToAdd, Long productId) {
+        this.quantityToAdd = quantityToAdd;
+        this.productId = productId;
+    }
+
     public Long getProductId() {
         return productId;
     }

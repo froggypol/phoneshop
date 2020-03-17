@@ -18,7 +18,7 @@ public class AddingToCartConverter implements Converter<AddingToCartForm, Adding
         return model;
     }
 
-    public void setAjaxAddingToCartDataPopulators(List<AddingToCartDataPopulator> addingToCartDataPopulators) {
+    public void setAddingToCartDataPopulators(List<AddingToCartDataPopulator> addingToCartDataPopulators) {
         this.populators = addingToCartDataPopulators;
     }
 }

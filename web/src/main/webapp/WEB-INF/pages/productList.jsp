@@ -13,22 +13,13 @@
 </head>
 
 <header>
-    <form class="cartInfo">
-        PhoneShop cart:
-        <p>
-            <label style="color: coral;" href="${pageContext.servletContext.contextPath}/cart" class="totalQuantity">
-                Total quantity : ${cart.totalQuantity} items </label>
-        </p>
-        <p>
-            <label style="color: coral;" href="${pageContext.servletContext.contextPath}/cart" class="totalCost"> Total
-                cost : ${cart.totalCost} $</label>
-        </p>
+    <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
+        <input type="submit" class="btn btn-outline-danger"  id="cartQuantity" value="Total quantity : ${cart.totalQuantity} items">
+    </form>
+    <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
+        <input type="submit" class="btn btn-outline-danger" id="cartValue" value="Total cost : ${cart.totalCost} $">
     </form>
 </header>
-
-<form method="get" action="/cart" name="cartForm">
-    <input type="button" id="cartValue" value="Cart : ${cart.totalCost}"></input>
-</form>
 
 <p>
     Hello from product list!
@@ -125,7 +116,7 @@
     </tr>
     </thead>
 
-    <c:forEach var="phoneItem" items="${phones}">
+    <c:forEach var="phoneItem" items="${phones}" varStatus="status">
         <tr class="productList">
             <td>
                 <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phoneItem.imageUrl}">
@@ -147,13 +138,13 @@
             <td>${phoneItem.description}</td>
             <td>
                 <input type="text" name="quantity" id="${phoneItem.id}" value="1">
-            </td>
-            <td>
-                <input type="submit" onclick="addPhoneViaAjax(${phoneItem.id},  $('#${phoneItem.id}').val())" value="Add"
-                       class="add"/>
                 <div>
                     <a readonly name="error-message" class="error-message&${phoneItem.id}" style="color: crimson"/>
                 </div>
+            </td>
+            <td>
+                <input type="submit" onclick="addPhone(${phoneItem.id},  $('#${phoneItem.id}').val())" value="Add"
+                       class="add"/>
             </td>
         </tr>
     </c:forEach>
@@ -217,7 +208,7 @@
 </html>
 
 <script>
-    function addPhoneViaAjax(phoneId, quantity, errorMsg) {
+    function addPhone(phoneId, quantity, errorMsg) {
         var data = {}
         data["totalCost"] = ${sessionScope.get("cart").totalCost};
         data["totalQuantity"] = ${sessionScope.get("cart").totalQuantity};
@@ -234,9 +225,9 @@
                 var allMessages = document.getElementsByName('error-message');
                 allMessages.forEach(function (messageItem) {
                     messageItem.innerHTML = "";
-                })
-                display(data);
-                $('#cartValue').val('Cart :' + data.totalCost + " $ ");
+                });
+                $('#cartValue').val('Total cost :' + data.totalCost + " $ ");
+                $('#cartQuantity').val('Total quantity : ' + data.totalQuantity + " items");
             },
             error: function (res) {
                 var tbody = document.getElementsByClassName('error-message&' + phoneId)[0];
@@ -248,8 +239,4 @@
         });
     }
 
-    function display(data) {
-        $(".totalCost").text("Total cost : " + data.totalCost + " $ ");
-        $(".totalQuantity").text("Total quantity " + data.totalQuantity + " items ");
-    }
 </script>
