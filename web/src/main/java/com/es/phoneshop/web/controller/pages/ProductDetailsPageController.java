@@ -16,7 +16,7 @@ public class ProductDetailsPageController {
 
     @GetMapping(value = "/productDetailsPage/productId={productId}")
     public String getProductDetailPage(@PathVariable(name = "productId", required = false) Long phoneId, Model model) {
-        productDetailsPageFacade.getProductDetailPage(phoneId,  model);
+        model.addAttribute("phone", productDetailsPageFacade.getProductDetailPage(phoneId));
         return "productDetailsPage";
     }
 }

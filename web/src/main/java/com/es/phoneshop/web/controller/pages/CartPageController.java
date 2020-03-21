@@ -21,7 +21,7 @@ public class CartPageController {
 
     @GetMapping (value = "/cart")
     public String getCart(Model model) {
-        cartPageFacade.getCart(model);
+        model.addAttribute("cart", cartPageFacade.getCart());
         return "cart";
     }
 
@@ -29,7 +29,7 @@ public class CartPageController {
     public String updateCart(@ModelAttribute("cartPageDTO") @Valid CartPageDTO cartPageDTO, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             model.addAttribute("cartPageDTO", cartPageDTO);
-            cartPageFacade.updateCart(cartPageDTO);
+            model.addAttribute("cart", cartPageFacade.updateCart(cartPageDTO));
             return "redirect:/cart";
         }
         return "cart";

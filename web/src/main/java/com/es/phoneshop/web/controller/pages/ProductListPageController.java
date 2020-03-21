@@ -22,7 +22,7 @@ public class ProductListPageController {
                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                   Model model) {
         ProductListPageForm productListPageForm = new ProductListPageForm(phoneNameQuery, fieldToSort, orderToSort, page);
-        phoneDaoFacade.showProductList(productListPageForm, model);
+        model.addAttribute("phones", phoneDaoFacade.showProductList(productListPageForm));
         return "productList";
     }
 }
