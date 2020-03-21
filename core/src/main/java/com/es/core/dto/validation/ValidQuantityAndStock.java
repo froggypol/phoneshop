@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 
 public @interface ValidQuantityAndStock {
 
-    String message() default "Invalid format for quantity(";
+    String message() default "Invalid format";
 
     Class<?>[] groups() default {};
 

@@ -14,7 +14,7 @@ public interface CartService {
 
     void addPhone(AddingToCartModel addingModel) throws OutOfStockException;
 
-    void update(Map<Long, Long> itemsWithNewQnt, List<CartItemModel> cartItemModels);
+    void update(Map<Long, String> itemsWithNewQnt, List<CartItemModel> cartItemModels);
 
     void remove(Long phoneId);
 }

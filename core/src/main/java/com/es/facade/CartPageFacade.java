@@ -22,21 +22,18 @@ public class CartPageFacade {
     @Resource
     private CartPageDTOConverter cartDtoConverter;
 
-    public String getCart(Model model) {
+    public void getCart(Model model) {
         CartModel cart = (CartModel) httpSession.getAttribute("cart");
         model.addAttribute("cart", cart);
-        return "cart";
     }
 
     public void deleteCartItemFromCart(@RequestParam(name = "idToDelete", required = false) Long idToDelete) {
         cartService.remove(idToDelete);
     }
 
-    public String updateCart(CartPageDTO cartPageDTO) {
+    public void updateCart(CartPageDTO cartPageDTO) {
         CartModel cartModel = cartService.getCart();
-        CartPageModel cartPageModel = new CartPageModel();
-        cartPageModel = cartDtoConverter.convert(cartPageDTO);
+        CartPageModel cartPageModel = cartDtoConverter.convert(cartPageDTO);
         cartService.update(cartPageModel.getCartInfoModels(), cartModel.getCartItems());
-        return "redirect:/cart";
     }
 }

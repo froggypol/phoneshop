@@ -49,7 +49,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(Map<Long, Long> itemsWithNewQnt, List<CartItemModel> cartItemModels) {
+    public void update(Map<Long, String> itemsWithNewQnt, List<CartItemModel> cartItemModels) {
         CartModel cart = getCart();
         itemsWithNewQnt.keySet().forEach(phoneId -> {
             PhoneModel addedPhoneModel = phoneService.get(phoneId);
@@ -61,7 +61,7 @@ public class HttpSessionCartService implements CartService {
             }
             CartItemModel addedCartItemModel = new CartItemModel(cartItemModels.get(index).getQuantity(),
                     addedPhoneModel);
-            CartItemModel updatedCartIem = new CartItemModel(itemsWithNewQnt.get(phoneId), addedPhoneModel);
+            CartItemModel updatedCartIem = new CartItemModel(Long.valueOf(itemsWithNewQnt.get(phoneId)), addedPhoneModel);
             cart.updateCart(addedCartItemModel, updatedCartIem);
         });
     }
@@ -69,6 +69,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void remove(Long phoneId) {
         CartModel cartModel = getCart();
-        cartModel.deleteFomCart(phoneId);
+        PhoneModel phoneModelToDelete = phoneService.get(phoneId);
+        cartModel.deleteFomCart(phoneModelToDelete);
     }
 }

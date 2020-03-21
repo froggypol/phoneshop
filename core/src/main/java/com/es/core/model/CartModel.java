@@ -48,11 +48,13 @@ public class CartModel {
 
     public BigDecimal countCost() {
         return getCartItems().stream()
-                             .reduce(BigDecimal.ZERO,
-                                    ((bigDecimal, cartItem) -> {
-                                        BigDecimal totalCost = cartItem.getPhone().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
-                                        return bigDecimal.add(totalCost);
-                                    }), BigDecimal::add);
+                             .reduce(BigDecimal.ZERO, ((currentCost, cartItem) -> returnTotalCost(currentCost, cartItem)),
+                                     BigDecimal::add);
+    }
+
+    private BigDecimal returnTotalCost(BigDecimal currentTotalCost, CartItemModel cartItemModel) {
+        BigDecimal totalCost = cartItemModel.getPhone().getPrice().multiply(BigDecimal.valueOf(cartItemModel.getQuantity()));
+        return currentTotalCost.add(totalCost);
     }
 
     public void updateAddingToCart(CartItemModel addedCartItem, CartItemModel cartItemToAdd) {
@@ -65,9 +67,9 @@ public class CartModel {
         }
     }
 
-    public void deleteFomCart(Long phoneIdToDelete) {
+    public void deleteFomCart(PhoneModel phoneModelToDelete) {
         Optional<CartItemModel> cartItemModelToDelete = cartItems.stream()
-                                                                 .filter(cartItemModel -> cartItemModel.getPhone().getId().equals(phoneIdToDelete))
+                                                                 .filter(cartItemModel -> cartItemModel.getPhone().equals(phoneModelToDelete))
                                                                  .findAny();
         if (cartItemModelToDelete.isPresent()) {
             cartItems.remove(cartItemModelToDelete.get());

@@ -68,9 +68,6 @@ Found
         <td>
             <a href="${pageContext.servletContext.contextPath}/productDetailsPage/productId=${cartItemModel.getPhone().getId()}">${cartItemModel.getPhone().getModel()}</a>
             <input type="hidden" name="productId" value="${cartItemModel.getPhone().getId()}">
-
-            <c:out value="${cartPageDTO.cartInfoDTOList}"/>
-            <c:out value="${status.index}"/>
         </td>
         <td>$ ${cartItemModel.getPhone().getPrice()}</td>
         <td>${cartItemModel.getPhone().getDisplaySizeInches()}</td>
@@ -86,7 +83,6 @@ Found
             <c:set var="idPhone" value="${cartItemModel.phone.id}"/>
             <input style="visibility: hidden" name="cartInfoDTOList[${status.index}].productId" value="${idPhone}"/>
             <input name="cartInfoDTOList[${status.index}].quantityToAdd" value="${cartItemModel.quantity}"/>
-            <%--<form:input path="cartInfoDTOList[${status.index}].quantityToAdd"/>${cartItemModel.quantity}--%>
             <div style="color: red; font-size: small">
                 <form:errors cssClass="errors" path="cartInfoDTOList[${status.index}].quantityToAdd"/>
             </div>

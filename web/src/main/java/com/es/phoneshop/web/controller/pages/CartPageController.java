@@ -5,9 +5,9 @@ import com.es.facade.CartPageFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
@@ -19,21 +19,23 @@ public class CartPageController {
     @Resource
     private CartPageFacade cartPageFacade;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/cart")
+    @GetMapping (value = "/cart")
     public String getCart(Model model) {
-        return cartPageFacade.getCart(model);
+        cartPageFacade.getCart(model);
+        return "cart";
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/cart")
+    @PutMapping (value = "/cart")
     public String updateCart(@ModelAttribute("cartPageDTO") @Valid CartPageDTO cartPageDTO, BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             model.addAttribute("cartPageDTO", cartPageDTO);
-            return cartPageFacade.updateCart(cartPageDTO);
+            cartPageFacade.updateCart(cartPageDTO);
+            return "redirect:/cart";
         }
         return "cart";
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/cart/deleteCartItem")
+    @PutMapping (value = "/cart/deleteCartItem")
     public String deleteCartItemFromCart(@RequestParam (name = "idToDelete", required = false) Long idToDelete) {
         cartPageFacade.deleteCartItemFromCart(idToDelete);
         return "redirect:/cart";

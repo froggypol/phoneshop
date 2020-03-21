@@ -24,12 +24,11 @@ public class ProductListFacade {
     @Resource
     private PaginationService service;
 
-    public String showProductList(ProductListPageForm pageForm, Model model) {
+    public void showProductList(ProductListPageForm pageForm, Model model) {
         ProductListPageParametersModel parametersModel = parametersConverter.convert(pageForm);
         List<PhoneModel> phoneListModel = service.listPages(parametersModel, model);
         List<PhoneData> phoneListData = new ArrayList<>();
         phoneListModel.stream().forEach(phoneModel -> phoneListData.add(phoneDataConverter.convert(phoneModel)));
         model.addAttribute("phones", phoneListData);
-        return "productList";
     }
 }

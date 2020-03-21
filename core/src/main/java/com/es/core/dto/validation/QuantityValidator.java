@@ -19,7 +19,7 @@ public class QuantityValidator implements ConstraintValidator<ValidQuantityAndSt
 
     @Override
     public boolean isValid(CartInfoDTO cartInfoDTO, ConstraintValidatorContext constraintValidatorContext) {
-        if (cartInfoDTO.getQuantityToAdd().matches("[0-9]+") && !cartInfoDTO.getQuantityToAdd().equals("")) {
+        if (cartInfoDTO.getQuantityToAdd().matches("[0-9]+") && !cartInfoDTO.getQuantityToAdd().isEmpty()) {
             PhoneModel phoneModel = phoneService.get(cartInfoDTO.getProductId());
             if (Long.valueOf(cartInfoDTO.getQuantityToAdd()) > phoneModel.getStock()) {
                 constraintValidatorContext.disableDefaultConstraintViolation();

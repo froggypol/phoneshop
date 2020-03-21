@@ -5,17 +5,17 @@ import java.util.Map;
 
 public class CartPageModel {
 
-    private Map<Long, Long> cartInfoModels;
+    private Map<Long, String> cartEntities;
 
     public CartPageModel() {
-        cartInfoModels = new HashMap<>();
+        cartEntities = new HashMap<>();
     }
 
-    public Map<Long, Long> getCartInfoModels() {
-        return cartInfoModels;
+    public Map<Long, String> getCartInfoModels() {
+        return cartEntities;
     }
 
-    public void setCartInfoModels(Map<Long, Long> cartInfoModels) {
-        this.cartInfoModels = cartInfoModels;
+    public void setCartInfoModels(Map<Long, String> cartEntities) {
+        this.cartEntities = cartEntities;
     }
 }
