@@ -5,7 +5,6 @@ import com.es.core.converter.CartPageDTOConverter;
 import com.es.core.model.CartModel;
 import com.es.core.model.CartPageModel;
 import com.es.service.HttpSessionCartService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -25,7 +24,7 @@ public class CartPageFacade {
         return (CartModel) httpSession.getAttribute("cart");
     }
 
-    public void deleteCartItemFromCart(@RequestParam(name = "idToDelete", required = false) Long idToDelete) {
+    public void deleteCartItemFromCart(Long idToDelete) {
         cartService.remove(idToDelete);
     }
 
