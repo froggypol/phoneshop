@@ -6,11 +6,9 @@ import com.es.core.form.ProductListPageForm;
 import com.es.core.data.PhoneData;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
-import com.es.service.PagingService;
-import org.springframework.ui.Model;
+import com.es.service.PaginationService;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +21,13 @@ public class ProductListFacade {
     private ProductListPageParametersConverter parametersConverter;
 
     @Resource
-    private PagingService service;
+    private PaginationService service;
 
-    public String showProductList(ProductListPageForm pageForm, Model model) {
+    public List<PhoneModel> showProductList(ProductListPageForm pageForm) {
         ProductListPageParametersModel parametersModel = parametersConverter.convert(pageForm);
-        List<PhoneModel> phoneListModel = service.listPages(parametersModel, model);
+        List<PhoneModel> phoneListModel = service.listPages(parametersModel);
         List<PhoneData> phoneListData = new ArrayList<>();
         phoneListModel.stream().forEach(phoneModel -> phoneListData.add(phoneDataConverter.convert(phoneModel)));
-        model.addAttribute("phones", phoneListData);
-        return "productList";
+        return phoneListModel;
     }
 }

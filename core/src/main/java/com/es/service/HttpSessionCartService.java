@@ -1,12 +1,10 @@
 package com.es.service;
 
+import com.es.core.model.AddingToCartModel;
 import com.es.core.model.CartItemModel;
 import com.es.core.exceptions.OutOfStockException;
-import com.es.core.data.PhoneData;
-import com.es.core.model.AddingToCartModel;
 import com.es.core.model.CartModel;
 import com.es.core.model.PhoneModel;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,14 +16,14 @@ import java.util.Map;
 public class HttpSessionCartService implements CartService {
 
     @Resource
-    private HttpSession httpSession;
+    private HttpSession session;
 
     @Resource
     private PhoneService phoneService;
 
     @Override
     public CartModel getCart() {
-        CartModel cart = (CartModel) httpSession.getAttribute("cart");
+        CartModel cart = (CartModel) session.getAttribute("cart");
         return cart;
     }
 
@@ -41,7 +39,7 @@ public class HttpSessionCartService implements CartService {
         if (cartItemList.contains(checkedCartItem)) {
             CartItemModel addedCartItem = cartItemList.get(cartItemList.indexOf(checkedCartItem));
             if (quantity <= phoneToAdd.getStock() - addedCartItem.getQuantity()){
-                cart.updateCart(cartItem, addedCartItem);
+                cart.updateAddingToCart(cartItem, addedCartItem);
             }
         } else if (!cartItemList.contains(checkedCartItem) && quantity <= phoneToAdd.getStock()) {
             cart.addToCart(cartItem);
@@ -51,11 +49,27 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(Map<Long, PhoneData> items) {
+    public void update(Map<Long, String> itemsWithNewQnt, List<CartItemModel> cartItemModels) {
+        CartModel cart = getCart();
+        itemsWithNewQnt.keySet().forEach(phoneId -> {
+            PhoneModel addedPhoneModel = phoneService.get(phoneId);
+            int index = 0;
+            for(CartItemModel model : cartItemModels) {
+                if (model.getPhone().equals(addedPhoneModel)) {
+                    index = cartItemModels.indexOf(model);
+                }
+            }
+            CartItemModel addedCartItemModel = new CartItemModel(cartItemModels.get(index).getQuantity(),
+                    addedPhoneModel);
+            CartItemModel updatedCartIem = new CartItemModel(Long.valueOf(itemsWithNewQnt.get(phoneId)), addedPhoneModel);
+            cart.updateCart(addedCartItemModel, updatedCartIem);
+        });
     }
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        CartModel cartModel = getCart();
+        PhoneModel phoneModelToDelete = phoneService.get(phoneId);
+        cartModel.deleteFomCart(phoneModelToDelete);
     }
 }

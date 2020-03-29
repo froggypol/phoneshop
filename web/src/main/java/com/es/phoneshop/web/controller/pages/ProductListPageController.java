@@ -1,14 +1,12 @@
 package com.es.phoneshop.web.controller.pages;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import com.es.facade.ProductListFacade;
 import com.es.core.form.ProductListPageForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -17,13 +15,14 @@ public class ProductListPageController {
     @Resource
     private ProductListFacade phoneDaoFacade;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/productList")
+    @GetMapping(value = "/productList")
     public String showProductList(@RequestParam(value = "query", required = false) String phoneNameQuery,
                                   @RequestParam(value = "order", required = false, defaultValue = "asc") String orderToSort,
                                   @RequestParam(value = "fieldToSort", required = false, defaultValue = "brand") String fieldToSort,
                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                   Model model) {
         ProductListPageForm productListPageForm = new ProductListPageForm(phoneNameQuery, fieldToSort, orderToSort, page);
-        return phoneDaoFacade.showProductList(productListPageForm, model);
+        model.addAttribute("phones", phoneDaoFacade.showProductList(productListPageForm));
+        return "productList";
     }
 }

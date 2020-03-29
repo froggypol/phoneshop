@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
-public class PagingService {
+public class PaginationService {
 
     @Resource
     private HttpSession httpSession;
@@ -23,7 +23,7 @@ public class PagingService {
     @Resource
     private JdbcPaginationDao paginationDao;
 
-    public List<PhoneModel> listPages(ProductListPageParametersModel parametersModel, Model model) {
+    public List<PhoneModel> listPages(ProductListPageParametersModel parametersModel) {
         Integer page = parametersModel.getPage();
         List<PhoneModel> phoneList;
         PaginationModel paginationModel = new PaginationModel();
@@ -40,7 +40,6 @@ public class PagingService {
             httpSession.setAttribute("page", (pageNumber - 1));
         }
         phoneList = phoneService.searchFor(parametersModel);
-        model.addAttribute("phones", phoneList);
         return phoneList;
     }
 

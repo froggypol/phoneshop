@@ -26,4 +26,13 @@
   <listener>
     <listener-class>com.es.core.listener.Listener</listener-class>
   </listener>
+
+  <filter>
+    <filter-name>httpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>httpMethodFilter</filter-name>
+    <servlet-name>dispatcher</servlet-name>
+  </filter-mapping>
 </web-app>
