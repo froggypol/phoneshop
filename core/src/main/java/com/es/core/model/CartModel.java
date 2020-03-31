@@ -28,6 +28,10 @@ public class CartModel {
         return cartItems;
     }
 
+    public void setCartItems(List<CartItemModel> cartItems) {
+        this.cartItems = cartItems;
+    }
+
     public void addToCart(CartItemModel cartItem) {
         cartItems.add(cartItem);
         recalculateBalance();

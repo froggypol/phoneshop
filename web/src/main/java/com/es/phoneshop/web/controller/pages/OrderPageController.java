@@ -1,26 +1,47 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.model.order.OrderService;
-import com.es.core.model.order.OutOfStockException;
+import com.es.core.exceptions.OutOfStockException;
+import com.es.core.form.OrderForm;
+import com.es.core.model.OrderModel;
+import com.es.facade.OrderPageFacade;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
-@RequestMapping(value = "/order")
 public class OrderPageController {
-    @Resource
-    private OrderService orderService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public void getOrder() throws OutOfStockException {
-        orderService.createOrder(null);
+    @Resource
+    private OrderPageFacade orderPageFacade;
+
+    @GetMapping(value = "/order")
+    public String getOrder(@ModelAttribute(name = "orderForm") OrderForm orderForm) {
+        return "order";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void placeOrder() throws OutOfStockException {
-        orderService.placeOrder(null);
+    @PostMapping(value = "/order")
+    public String placeOrder(@ModelAttribute(name = "orderForm") @Valid OrderForm orderForm, BindingResult bindingResult,
+                             Model model) throws OutOfStockException {
+        if (!bindingResult.hasErrors()) {
+            OrderModel orderModel = orderPageFacade.createOrder(orderForm);
+            boolean checkIfInvalidStock = orderPageFacade.hasErrors(orderModel, bindingResult);
+            if (checkIfInvalidStock == true) {
+                List<ObjectError> fieldErrors = bindingResult.getAllErrors();
+                model.addAttribute("errors", fieldErrors);
+            } else {
+                orderPageFacade.placeOrder(orderModel);
+                model.addAttribute("orderModel", orderModel);
+                return "redirect:/orderOverview?orderId=" + orderModel.getId();
+            }
+        }
+        return "order";
     }
 }

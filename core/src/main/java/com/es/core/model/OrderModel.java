@@ -1,42 +1,71 @@
-package com.es.core.order;
+package com.es.core.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
-public class Order
-{
-    private Long id;
-    private List<OrderItem> orderItems;
-    /**
-     *  A sum of order item prices;
-     */
+public class OrderModel {
+
+    private UUID id;
+
+    private BigDecimal number;
+
+    private List<OrderItemModel> orderItems = new ArrayList<>();
+
     private BigDecimal subtotal;
+
     private BigDecimal deliveryPrice;
-    /**
-     * <code>subtotal</code> + <code>deliveryPrice</code>
-     */
+
     private BigDecimal totalPrice;
 
     private String firstName;
+
     private String lastName;
+
     private String deliveryAddress;
+
     private String contactPhoneNo;
+
+    private String otherInfo;
 
     private OrderStatus status;
 
-    public Long getId() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderModel order = (OrderModel) o;
+        return id.equals(order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public List<OrderItem> getOrderItems() {
+    public BigDecimal getNumber() {
+        return number;
+    }
+
+    public void setNumber(BigDecimal number) {
+        this.number = number;
+    }
+
+    public List<OrderItemModel> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
+    public void setOrderItems(List<OrderItemModel> orderItems) {
         this.orderItems = orderItems;
     }
 
@@ -52,8 +81,17 @@ public class Order
         return deliveryPrice;
     }
 
+
     public void setDeliveryPrice(BigDecimal deliveryPrice) {
         this.deliveryPrice = deliveryPrice;
+    }
+
+    public String getOtherInfo() {
+        return otherInfo;
+    }
+
+    public void setOtherInfo(String otherInfo) {
+        this.otherInfo = otherInfo;
     }
 
     public BigDecimal getTotalPrice() {
@@ -103,4 +141,5 @@ public class Order
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
 }

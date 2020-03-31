@@ -1,5 +1,7 @@
 package com.es.core.dao;
 
+import com.es.core.model.CartItemModel;
+import com.es.core.model.CartModel;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ColorModel;
 import com.es.core.model.extractor.PhoneExtractor;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @PropertySource("classpath:properties/application.properties")
@@ -100,4 +103,16 @@ public class JdbcPhoneDao implements PhoneDao {
         return findAndSortUtil.findByAllWordsInQuery(parametersModel, phoneNameQuery);
     }
 
+    public void updateAfterOrder(CartModel cart) {
+        List<PhoneModel> phoneModels = cart.getCartItems().stream()
+                .map(CartItemModel::getPhone).collect(Collectors.toList());
+        phoneModels.forEach(phoneModel -> {
+            CartItemModel addedPhone = cart.getCartItems().stream()
+                                                          .filter(cartItemModel -> cartItemModel.getPhone().equals(phoneModel))
+                                                          .findAny()
+                                                          .get();
+            jdbcTemplate.update("update stocks set stocks.stock = ? where stocks.phoneId = ?",
+                    phoneModel.getStock() - addedPhone.getQuantity(), phoneModel.getId());
+        });
+    }
 }

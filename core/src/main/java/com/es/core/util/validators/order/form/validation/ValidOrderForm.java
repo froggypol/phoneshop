@@ -1,4 +1,6 @@
-package com.es.core.dto.validation;
+package com.es.core.util.validators.order.form.validation;
+
+import com.es.core.util.validators.order.form.validation.OrderFormValidation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,11 +11,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = QuantityValidator.class)
+@Constraint(validatedBy = OrderFormValidation.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 
-public @interface ValidQuantityAndStock {
+public @interface ValidOrderForm {
 
     String message() default "Invalid format";
 

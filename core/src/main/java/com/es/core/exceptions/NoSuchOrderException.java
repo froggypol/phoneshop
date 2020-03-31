@@ -1,6 +1,6 @@
 package com.es.core.exceptions;
 
-public class NotFoundPhoneCustomException extends RuntimeException {
+public class NoSuchOrderException extends RuntimeException {
 
     private String errCode;
 
@@ -22,8 +22,9 @@ public class NotFoundPhoneCustomException extends RuntimeException {
         this.errMsg = errMsg;
     }
 
-    public NotFoundPhoneCustomException() {
+    public NoSuchOrderException() {
         this.errCode = "404";
-        this.errMsg = "Not found such phone";
+        this.errMsg = "Not found such order. Sorry";
     }
+
 }

@@ -5,9 +5,11 @@
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:component-scan base-package="com.es"/>
+
+    <context:property-placeholder location="classpath:properties/application.properties"/>
 
     <import resource="classpath:context/appContext-configurer.xml"/>
 
@@ -18,6 +20,10 @@
     <bean id="ajaxAddingToCartFacade" class="com.es.facade.AddingToCartFacade"/>
 
     <bean id="productListFacade" class="com.es.facade.ProductListFacade"/>
+
+    <bean id="orderPageFacade" class="com.es.facade.OrderPageFacade"/>
+
+    <bean id="orderOverviewPageFacade" class="com.es.facade.OrderOverviewPageFacade"/>
 
     <bean id="quantityForAddingOnPLPForm" class="com.es.core.form.ProductListPageForm"/>
 
@@ -71,6 +77,16 @@
         </property>
     </bean>
 
+    <bean id="orderModelPopulator" class="com.es.core.populator.impl.OrderModelPopulator"/>
+
+    <bean id="orderFormConverter" class="com.es.core.converter.OrderFormConverter">
+        <property name="populators">
+            <list>
+                <ref bean="orderModelPopulator"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${db.driver}"/>
         <property name="url" value="${db.url}"/>
@@ -90,6 +106,8 @@
 
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+    <bean id="orderValidator" class="com.es.core.util.validators.PlaceOrderValidator"/>
 
     <jdbc:initialize-database enabled="true" data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql"/>
