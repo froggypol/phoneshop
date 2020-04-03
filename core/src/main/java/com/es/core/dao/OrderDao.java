@@ -8,15 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
 public class OrderDao {
-
-    private List<OrderModel> orderList;
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -25,23 +22,29 @@ public class OrderDao {
     private PhoneService phoneService;
 
     private OrderDao() {
-        orderList = new ArrayList<>();
+
+    }
+
+    public List<OrderModel> getOrders() {
+        List<OrderModel> orderList = jdbcTemplate.query("select * from orders ", new OrderExtractor(phoneService));
+        return orderList;
     }
 
     public void saveOrder(OrderModel order) {
+        List<OrderModel> orderList = getOrders();
         if (!orderList.contains(order)) {
             order.setStatus(OrderStatus.NEW);
             orderList.add(order);
             order.getOrderItems().forEach(orderItemModel -> {
-                String id = order.getId().toString();
-                Long phoneId = orderItemModel.getPhone().getId() ;
+                        String id = order.getId().toString();
+                        Long phoneId = orderItemModel.getPhone().getId() ;
                         jdbcTemplate.update("insert into orders (quantity, orderId, phoneId, firstName, lastName, address," +
-                                                " contactPhoneNo, otherInfo, status, totalPrice, subTotalPrice, deliveryPrice)" +
-                                                " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", orderItemModel.getQuantity(),
-                                            id, phoneId, order.getFirstName(), order.getLastName(), order.getDeliveryAddress(),
-                                            order.getContactPhoneNo(), order.getOtherInfo(), order.getStatus().toString(),
-                                            order.getTotalPrice(),  order.getTotalPrice().subtract(order.getDeliveryPrice()),
-                                            order.getDeliveryPrice());
+                                        " contactPhoneNo, otherInfo, status, totalPrice, subTotalPrice, deliveryPrice)" +
+                                        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", orderItemModel.getQuantity(),
+                                id, phoneId, order.getFirstName(), order.getLastName(), order.getDeliveryAddress(),
+                                order.getContactPhoneNo(), order.getOtherInfo(), order.getStatus().toString(),
+                                order.getTotalPrice(),  order.getTotalPrice().subtract(order.getDeliveryPrice()),
+                                order.getDeliveryPrice());
                     }
             );
         }
@@ -60,9 +63,5 @@ public class OrderDao {
 
     public void recalculate(OrderModel order) {
         order.setTotalPrice(order.getTotalPrice().add(order.getDeliveryPrice()));
-    }
-
-    public List<OrderModel> getOrderList() {
-        return orderList;
     }
 }

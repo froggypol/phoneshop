@@ -28,9 +28,6 @@ public class OrderServiceImpl implements OrderService {
     private HttpSessionCartService cartService;
 
     @Resource
-    private PhoneService phoneService;
-
-    @Resource
     private OrderDao orderDao;
 
     @Override
@@ -55,7 +52,6 @@ public class OrderServiceImpl implements OrderService {
     public void placeOrder(OrderModel order) throws OutOfStockException {
         orderDao.recalculate(order);
         orderDao.saveOrder(order);
-        phoneService.updateProductAfterOrder();
         updateCart();
     }
 
