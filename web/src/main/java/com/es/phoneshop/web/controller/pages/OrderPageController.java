@@ -3,6 +3,7 @@ package com.es.phoneshop.web.controller.pages;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.form.OrderForm;
 import com.es.core.model.OrderModel;
+import com.es.core.util.validators.PlaceOrderValidator;
 import com.es.facade.OrderPageFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,9 @@ import java.util.List;
 public class OrderPageController {
 
     @Resource
+    private PlaceOrderValidator placeOrderValidator;
+
+    @Resource
     private OrderPageFacade orderPageFacade;
 
     @GetMapping(value = "/order")
@@ -32,7 +36,7 @@ public class OrderPageController {
                              Model model) throws OutOfStockException {
         if (!bindingResult.hasErrors()) {
             OrderModel orderModel = orderPageFacade.createOrder(orderForm);
-            boolean checkIfInvalidStock = orderPageFacade.hasErrors(orderModel, bindingResult);
+            boolean checkIfInvalidStock = hasErrors(orderModel, bindingResult);
             if (checkIfInvalidStock == true) {
                 List<ObjectError> fieldErrors = bindingResult.getAllErrors();
                 model.addAttribute("errors", fieldErrors);
@@ -43,5 +47,10 @@ public class OrderPageController {
             }
         }
         return "order";
+    }
+
+    private boolean hasErrors(OrderModel orderModel, BindingResult bindingResult) {
+        placeOrderValidator.validate(orderModel, bindingResult);
+        return bindingResult.hasErrors();
     }
 }
