@@ -21,7 +21,9 @@ public class OrderOverviewPageController {
         if (orderId != null && !orderId.equals("")) {
             OrderModel orderModel = orderOverviewPageFacade.getOrder(orderId);
             model.addAttribute("orderModel", orderModel);
+            return "orderOverview";
+        } else {
+            return "/errorPages/noSuchOrder";
         }
-        return "orderOverview";
     }
 }
