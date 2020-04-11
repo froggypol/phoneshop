@@ -27,6 +27,7 @@
     </form>
 </header>
 
+<html>
 <form method="get" action="/cart" name="cartForm">
     <input type="button" id="cartValue" value="Cart : ${cart.totalCost}">
 </form>
@@ -96,11 +97,13 @@ Found
         </td>
         </tr>
     </c:forEach>
-    <td>
         <input type="submit" class="btn btn-success" value="Update"/>
-    </td>
+
     </table>
 </form:form>
 </p>
+<form method="get" action="${pageContext.servletContext.contextPath}/order">
+    <input type="submit" class="btn btn-success" value="Order" />
+</form>
 </body>
 </html>

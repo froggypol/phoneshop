@@ -5,7 +5,6 @@ import com.es.core.model.PaginationModel;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;

@@ -1,6 +1,7 @@
 package com.es.service;
 
 import com.es.core.dao.JdbcPhoneDao;
+import com.es.core.model.CartModel;
 import com.es.core.model.PhoneModel;
 import com.es.core.exceptions.NotFoundPhoneCustomException;
 import com.es.core.model.ProductListPageParametersModel;
@@ -18,6 +19,9 @@ public class PhoneService {
     private int limit;
 
     @Resource
+    private HttpSessionCartService cartService;
+
+    @Resource
     private JdbcPhoneDao phoneDao;
 
     public PhoneModel get(final Long key) throws NotFoundPhoneCustomException {
@@ -27,6 +31,11 @@ public class PhoneService {
         } else {
             throw new NotFoundPhoneCustomException();
         }
+    }
+
+    public void updateProductAfterOrder() {
+        CartModel cart = cartService.getCart();
+        phoneDao.updateAfterOrder(cart);
     }
 
     public void save(final PhoneModel phoneToSave) {

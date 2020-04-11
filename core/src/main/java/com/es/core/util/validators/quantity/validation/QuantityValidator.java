@@ -1,4 +1,4 @@
-package com.es.core.dto.validation;
+package com.es.core.util.validators.quantity.validation;
 
 import com.es.core.dto.CartInfoDTO;
 import com.es.core.model.PhoneModel;

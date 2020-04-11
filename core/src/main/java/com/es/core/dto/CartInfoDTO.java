@@ -1,6 +1,6 @@
 package com.es.core.dto;
 
-import com.es.core.dto.validation.ValidQuantityAndStock;
+import com.es.core.util.validators.quantity.validation.ValidQuantityAndStock;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

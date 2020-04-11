@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.core.exceptions.NoSuchOrderException;
 import com.es.core.exceptions.NotFoundPhoneCustomException;
 import com.es.core.exceptions.OutOfStockException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,7 +22,15 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(OutOfStockException.class)
     public ModelAndView handleExceptionInStock(OutOfStockException exception) {
         ModelAndView modelAndView = new ModelAndView("errorPages/notEnoughStockPhone");
-        modelAndView.addObject("errCode", exception.getErrCode());
+        modelAndView.addObject("error-message", exception.getErrCode());
+        modelAndView.addObject("errMsg", exception.getErrMsg());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(NoSuchOrderException.class)
+    public ModelAndView handleExceptionInStock(NoSuchOrderException exception) {
+        ModelAndView modelAndView = new ModelAndView("errorPages/noSuchOrder");
+        modelAndView.addObject("error-message", exception.getErrCode());
         modelAndView.addObject("errMsg", exception.getErrMsg());
         return modelAndView;
     }
