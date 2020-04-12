@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class JdbcPaginationDao {
+public class JdbcPhonePaginationDao {
 
     @Resource
     private JdbcTemplate jdbcTemplate;

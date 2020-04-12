@@ -1,12 +1,12 @@
 package com.es.core.model;
 
-public class PaginationModel {
+public class PhonePaginationModel {
 
     private int phonesOnPage;
 
     private int countPages;
 
-    public PaginationModel() {
+    public PhonePaginationModel() {
         this.phonesOnPage = 10;
     }
 

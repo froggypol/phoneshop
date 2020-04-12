@@ -6,7 +6,7 @@ import com.es.core.form.ProductListPageForm;
 import com.es.core.data.PhoneData;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
-import com.es.service.PaginationService;
+import com.es.service.PhonePaginationService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class ProductListFacade {
     private ProductListPageParametersConverter parametersConverter;
 
     @Resource
-    private PaginationService service;
+    private PhonePaginationService service;
 
     public List<PhoneModel> showProductList(ProductListPageForm pageForm) {
         ProductListPageParametersModel parametersModel = parametersConverter.convert(pageForm);

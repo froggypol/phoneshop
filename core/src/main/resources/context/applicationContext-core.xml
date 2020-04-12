@@ -25,6 +25,8 @@
 
     <bean id="orderOverviewPageFacade" class="com.es.facade.OrderOverviewPageFacade"/>
 
+    <bean id="ordersAdminPageFacade" class="com.es.facade.OrdersAdminPageFacade"/>
+
     <bean id="quantityForAddingOnPLPForm" class="com.es.core.form.ProductListPageForm"/>
 
     <bean id="phoneDataPopulator" class="com.es.core.populator.impl.PhoneModelPopulator"/>

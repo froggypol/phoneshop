@@ -30,6 +30,12 @@ public class OrderDao {
         return orderList;
     }
 
+    public List<OrderModel> findAll(int limit, int offset) {
+        List<OrderModel> orderList = jdbcTemplate.query("select * from orders limit ? offset ?", new OrderExtractor(phoneService),
+                new Object[]{limit, offset});
+        return orderList;
+    }
+
     public void saveOrder(OrderModel order) {
         List<OrderModel> orderList = getOrders();
         if (!orderList.contains(order)) {
@@ -63,5 +69,16 @@ public class OrderDao {
 
     public void recalculate(OrderModel order) {
         order.setTotalPrice(order.getTotalPrice().add(order.getDeliveryPrice()));
+    }
+
+    public Optional<OrderModel> getOrderByNumber(Integer orderNumber) {
+        UUID orderId = jdbcTemplate.queryForObject("select orderId from orders where orders.number = ?", UUID.class,
+                new Object[]{orderNumber});
+        return getOrderByIdThroughDB(orderId);
+    }
+
+    public OrderModel changeStatus(String status, UUID orderId) {
+        jdbcTemplate.update("update orders set status = (?) where orders.orderId = ?", new Object[]{(status), orderId});
+        return getOrderByIdThroughDB(orderId).get();
     }
 }
