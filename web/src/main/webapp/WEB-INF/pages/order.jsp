@@ -13,7 +13,8 @@
 
 <header>
     <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
-        <input type="submit" class="btn btn-outline-danger"  id="cartQuantity" value="Total quantity : ${cart.totalQuantity} items">
+        <input type="submit" class="btn btn-outline-danger" id="cartQuantity"
+               value="Total quantity : ${cart.totalQuantity} items">
     </form>
     <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
         <input type="submit" class="btn btn-outline-danger" id="cartValue" value="Total cost : ${cart.totalCost} $">
@@ -63,7 +64,8 @@
                 </td>
                 <td>${cartItem.getPhone().getDescription()}</td>
                 <td>
-                    <input type="text" name="quantity" id="${cartItem.getPhone().getId()}" value="${cartItem.getQuantity()}">
+                    <input type="text" name="quantity" id="${cartItem.getPhone().getId()}"
+                           value="${cartItem.getQuantity()}">
                     <div style="color: red; font-size: small">
                         <c:forEach var="errorItem" items="${errors}">
                             <c:if test="${errorItem.code.equals(cartItem.getPhone().getId().toString())}">
@@ -138,6 +140,5 @@
         ${orderModel.orderItems.add(orderItem)}
     </c:forEach>
 </form:form>
-</p>
 </body>
 </html>

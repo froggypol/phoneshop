@@ -1,7 +1,5 @@
 package com.es.core.model;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class ProductListPageParametersModel {
 
     private String phoneNameQuery;
@@ -12,7 +10,6 @@ public class ProductListPageParametersModel {
 
     private Integer page;
 
-    @Value("${phones.limit}")
     private Integer limit;
 
     private Integer offset;

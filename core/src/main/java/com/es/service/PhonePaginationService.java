@@ -4,6 +4,8 @@ import com.es.core.dao.JdbcPhonePaginationDao;
 import com.es.core.model.PhonePaginationModel;
 import com.es.core.model.PhoneModel;
 import com.es.core.model.ProductListPageParametersModel;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,7 +13,11 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
+@PropertySource("classpath:properties/application.properties")
 public class PhonePaginationService {
+
+    @Value("#{new java.lang.Integer(${orders.limit})}")
+    private Integer limit;
 
     @Resource
     private HttpSession httpSession;
@@ -44,7 +50,7 @@ public class PhonePaginationService {
 
     private int countPages(ProductListPageParametersModel parametersModel, PhonePaginationModel paginationModel) {
         double counter;
-        int limit = paginationModel.getPhonesOnPage();
+        limit = paginationModel.getPhonesOnPage();
         int offset = paginationModel.getPhonesOnPage() * (parametersModel.getPage() - 1);
         parametersModel.setLimit(limit);
         parametersModel.setOffset(offset);

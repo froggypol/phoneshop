@@ -3,6 +3,8 @@ drop table if exists colors;
 drop table if exists stocks;
 drop table if exists phones;
 drop table if exists orders;
+drop table if exists users;
+drop table if exists user_roles;
 
 create table colors
 (
@@ -61,7 +63,7 @@ create table stocks
 
 create table orders
 (
-  phoneId        BIGINT   NOT NULL,
+  phoneId        BIGINT NOT NULL,
   number         BIGINT AUTO_INCREMENT primary key,
   orderId        VARCHAR(500),
   quantity       SMALLINT NOT NULL,
@@ -76,3 +78,18 @@ create table orders
   deliveryPrice  BIGINT,
   CONSTRAINT FK_orders_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE  TABLE users
+(
+username VARCHAR(45) NOT NULL ,
+password VARCHAR(45) NOT NULL ,
+enabled TINYINT NOT NULL DEFAULT 1 ,
+PRIMARY KEY (username)
+);
+
+CREATE TABLE user_roles
+(
+  username varchar(45),
+  role varchar(45)
+);
+

@@ -2,6 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="tags" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
@@ -12,9 +13,12 @@
 </head>
 
 <header>
-    <form class="cartInfo" action="${pageForOrderContext.servletContext.contextPath}/productList">
+    <sec:authorize access="isAuthenticated()">
+    <form method="post" class="cartInfo" action="<c:url value="/logout"/>">
         <input type="submit" class="btn btn-outline-danger"  value="Logout">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     </form>
+    </sec:authorize>
 </header>
 
 <p>
@@ -92,7 +96,7 @@
             </c:forEach>
         </c:if>
         <c:if test="${(pageForOrder + 9) > (maxPagesForOrder - 1)}">
-            <c:forEach begin="${pageForOrder-1}" end="${(maxPagesForOrder - 1)}" varStatus="loop">
+            <c:forEach begin="${pageForOrder}" end="${(maxPagesForOrder - 1)}" varStatus="loop">
                 <li class="page-item">
                     <form href="/phoneshop_web_war_exploded/admin/orders?pageForOrder=${param.pageForOrder}">
                         <button class="page-link">${loop.index+1}

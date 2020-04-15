@@ -2,6 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="tags" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
@@ -12,15 +13,19 @@
 </head>
 
 <header>
-    <form class="cartInfo" action="${pageContext.servletContext.contextPath}/productList">
-        <input type="submit" class="btn btn-outline-danger"  value="Logout">
-    </form>
+
+    <sec:authorize access="isAuthenticated()">
+        <form method="post" action="<c:url value="/logout"/>">
+            <input type="submit" class="btn btn-outline-danger" value="Logout">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+    </sec:authorize>
 </header>
 
 <body>
 
 <form:form modelAttribute="orderModelInfo">
-        <p>
+    <p>
     <div>
         <label>
             <input value="Delivery Cost : ${orderModelInfo.deliveryPrice}" readonly>
@@ -33,38 +38,38 @@
         </label>
     </div>
 
-        <table class="table table-bordered">
-            <thead class="thead-light">
-            <tr>
-                <th scope="col" style="width: 10rem;">Brand</th>
-                <th scope="col" style="width: 10rem;">Model</th>
-                <th scope="col" style="width: 10rem;">Color</th>
-                <th scope="col" style="width: 20rem;">Display size</th>
-                <th scope="col" style="width: 10rem;">Quantity</th>
-                <th scope="col" style="width: 10rem;">Price</th>
-                <th scope="col" style="width: 10rem;">Status</th>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col" style="width: 10rem;">Brand</th>
+            <th scope="col" style="width: 10rem;">Model</th>
+            <th scope="col" style="width: 10rem;">Color</th>
+            <th scope="col" style="width: 20rem;">Display size</th>
+            <th scope="col" style="width: 10rem;">Quantity</th>
+            <th scope="col" style="width: 10rem;">Price</th>
+            <th scope="col" style="width: 10rem;">Status</th>
+        </tr>
+        </thead>
+        <c:forEach var="orderItem" items="${orderModelInfo.orderItems}">
+            <tr class="prod">
+                <td>
+                        ${orderItem.phone.brand}
+                </td>
+                <td>${orderItem.phone.model}</td>
+                <td>
+                    <c:forEach var="colorItem" items="${orderItem.phone.colors}">
+                        ${colorItem.code}
+                    </c:forEach>
+                </td>
+                <td>${orderItem.phone.displaySizeInches}</td>
+                <td>${orderItem.quantity}</td>
+                <td>${orderItem.phone.price}</td>
+                <td>${orderModelInfo.status}</td>
             </tr>
-            </thead>
-                <c:forEach var="orderItem" items="${orderModelInfo.orderItems}">
-                    <tr class="prod">
-                        <td>
-                            ${orderItem.phone.brand}
-                        </td>
-                        <td>${orderItem.phone.model}</td>
-                        <td>
-                            <c:forEach var="colorItem" items="${orderItem.phone.colors}">
-                                ${colorItem.code}
-                            </c:forEach>
-                        </td>
-                        <td>${orderItem.phone.displaySizeInches}</td>
-                        <td>${orderItem.quantity}</td>
-                        <td>${orderItem.phone.price}</td>
-                        <td>${orderModelInfo.status}</td>
-                    </tr>
-                </c:forEach>
-        </table>
+        </c:forEach>
+    </table>
 
-        <br>
+    <br>
 
     <div style="margin-left: 20%; margin-bottom: 3%;">
         <table class="table table-bordered">
@@ -78,7 +83,7 @@
             </tr>
             </thead>
             <td>
-                ${orderModelInfo.firstName}
+                    ${orderModelInfo.firstName}
             </td>
             <td>
                     ${orderModelInfo.lastName}

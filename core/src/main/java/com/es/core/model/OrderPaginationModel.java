@@ -2,47 +2,37 @@ package com.es.core.model;
 
 public class OrderPaginationModel {
 
-    private int limit;
+    private Integer limit;
 
-    private int offset;
+    private Integer offset;
 
-    private int ordersOnPage;
-
-    private int countPages;
+    private double countPages;
 
     public OrderPaginationModel() {
-        this.ordersOnPage = 5;
+
     }
 
-    public int getOrdersOnPage() {
-        return ordersOnPage;
-    }
-
-    public void setOrdersOnPage(int ordersOnPage) {
-        this.ordersOnPage = ordersOnPage;
-    }
-
-    public int getCountPages() {
-        return countPages;
-    }
-
-    public void setCountPages(int countPages) {
-        this.countPages = countPages;
-    }
-
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
-    public int getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
+    public void setOffset(Integer offset) {
         this.offset = offset;
+    }
+
+    public double getCountPages() {
+        return countPages;
+    }
+
+    public void setCountPages(double countPages) {
+        this.countPages = countPages;
     }
 }

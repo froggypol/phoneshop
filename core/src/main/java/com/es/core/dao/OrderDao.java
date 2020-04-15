@@ -21,17 +21,29 @@ public class OrderDao {
     @Resource
     private PhoneService phoneService;
 
+    private String GET_ORDER_BY_NUMBER_QUERY = "select orderId from orders where orders.number = ?";
+
+    private String CHANGE_STATUS_QUERY = "update orders set status = (?) where orders.orderId = ?";
+
+    private String GET_ORDER_BY_ID_QUERY = "select * from orders where orders.orderId like ?";
+
+    private String INSERT_ORDER_QUERY = "insert into orders (quantity, orderId, phoneId, firstName, lastName, address," +
+            " contactPhoneNo, otherInfo, status, totalPrice, subTotalPrice, deliveryPrice)" +
+            " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private String GET_ALL_ORDERS_QUERY = "select * from orders ";
+
     private OrderDao() {
 
     }
 
     public List<OrderModel> getOrders() {
-        List<OrderModel> orderList = jdbcTemplate.query("select * from orders ", new OrderExtractor(phoneService));
+        List<OrderModel> orderList = jdbcTemplate.query(GET_ALL_ORDERS_QUERY, new OrderExtractor(phoneService));
         return orderList;
     }
 
     public List<OrderModel> findAll(int limit, int offset) {
-        List<OrderModel> orderList = jdbcTemplate.query("select * from orders limit ? offset ?", new OrderExtractor(phoneService),
+        List<OrderModel> orderList = jdbcTemplate.query(GET_ALL_ORDERS_QUERY + "limit ? offset ?", new OrderExtractor(phoneService),
                 new Object[]{limit, offset});
         return orderList;
     }
@@ -44,9 +56,7 @@ public class OrderDao {
             order.getOrderItems().forEach(orderItemModel -> {
                         String id = order.getId().toString();
                         Long phoneId = orderItemModel.getPhone().getId() ;
-                        jdbcTemplate.update("insert into orders (quantity, orderId, phoneId, firstName, lastName, address," +
-                                        " contactPhoneNo, otherInfo, status, totalPrice, subTotalPrice, deliveryPrice)" +
-                                        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", orderItemModel.getQuantity(),
+                        jdbcTemplate.update(INSERT_ORDER_QUERY, orderItemModel.getQuantity(),
                                 id, phoneId, order.getFirstName(), order.getLastName(), order.getDeliveryAddress(),
                                 order.getContactPhoneNo(), order.getOtherInfo(), order.getStatus().toString(),
                                 order.getTotalPrice(),  order.getTotalPrice().subtract(order.getDeliveryPrice()),
@@ -58,8 +68,7 @@ public class OrderDao {
 
     public Optional<OrderModel> getOrderByIdThroughDB(UUID orderId)  {
         String id = orderId.toString();
-        List<OrderModel> orderModelList = jdbcTemplate.query("select * from orders where orders.orderId like ?",
-                new OrderExtractor(phoneService), "%" + id + "%");
+        List<OrderModel> orderModelList = jdbcTemplate.query(GET_ORDER_BY_ID_QUERY, new OrderExtractor(phoneService), "%" + id + "%");
         if (orderModelList.size() == 0) {
             return Optional.ofNullable(null);
         } else {
@@ -72,13 +81,13 @@ public class OrderDao {
     }
 
     public Optional<OrderModel> getOrderByNumber(Integer orderNumber) {
-        UUID orderId = jdbcTemplate.queryForObject("select orderId from orders where orders.number = ?", UUID.class,
+        UUID orderId = jdbcTemplate.queryForObject(GET_ORDER_BY_NUMBER_QUERY, UUID.class,
                 new Object[]{orderNumber});
         return getOrderByIdThroughDB(orderId);
     }
 
     public OrderModel changeStatus(String status, UUID orderId) {
-        jdbcTemplate.update("update orders set status = (?) where orders.orderId = ?", new Object[]{(status), orderId});
+        jdbcTemplate.update(CHANGE_STATUS_QUERY, new Object[]{(status), orderId});
         return getOrderByIdThroughDB(orderId).get();
     }
 }
