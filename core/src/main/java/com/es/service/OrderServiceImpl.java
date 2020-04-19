@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +30,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderDao orderDao;
+
+    @Override
+    public List<OrderModel> findAll(int limit, int offset) {
+        return orderDao.findAll(limit, offset);
+    }
 
     @Override
     public OrderModel createOrder(CartModel cart, OrderModel orderModel) {
@@ -69,5 +75,21 @@ public class OrderServiceImpl implements OrderService {
         } else {
             throw new NoSuchOrderException();
         }
+    }
+
+    @Override
+    public OrderModel getOrderByNumber(Integer orderNumber) {
+        Optional<OrderModel> orderModel = orderDao.getOrderByNumber(orderNumber);
+        if (orderModel.isPresent()) {
+            return orderModel.get();
+        } else {
+            throw new NoSuchOrderException();
+        }
+    }
+
+    @Override
+    public OrderModel changeStatus(String status, Integer orderNumber) {
+        OrderModel orderModelForId = orderDao.getOrderByNumber(orderNumber).get();
+        return orderDao.changeStatus(status, orderModelForId.getId());
     }
 }

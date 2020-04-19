@@ -25,6 +25,10 @@
 
     <bean id="orderOverviewPageFacade" class="com.es.facade.OrderOverviewPageFacade"/>
 
+    <bean id="ordersAdminPageFacade" class="com.es.facade.OrdersAdminPageFacade"/>
+
+    <bean id="registrationFacade" class="com.es.facade.RegistrationFacade"/>
+
     <bean id="quantityForAddingOnPLPForm" class="com.es.core.form.ProductListPageForm"/>
 
     <bean id="phoneDataPopulator" class="com.es.core.populator.impl.PhoneModelPopulator"/>
@@ -83,6 +87,16 @@
         <property name="populators">
             <list>
                 <ref bean="orderModelPopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="userFormPopulator" class="com.es.core.populator.impl.RegistrationUserFormPopulator"/>
+
+    <bean id="registrationUserFormConverter" class="com.es.core.converter.RegistrationUserFormConverter">
+        <property name="populators">
+            <list>
+                <ref bean="userFormPopulator"/>
             </list>
         </property>
     </bean>

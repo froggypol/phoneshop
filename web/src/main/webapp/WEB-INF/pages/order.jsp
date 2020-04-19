@@ -13,26 +13,23 @@
 
 <header>
     <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
-        <input type="submit" class="btn btn-outline-danger"  id="cartQuantity" value="Total quantity : ${cart.totalQuantity} items">
+        <input type="submit" class="btn btn-outline-danger" id="cartQuantity"
+               value="Total quantity : ${cart.totalQuantity} items">
     </form>
     <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
         <input type="submit" class="btn btn-outline-danger" id="cartValue" value="Total cost : ${cart.totalCost} $">
     </form>
 </header>
 
-    <body>
+<body>
 
-    <form method="get" action="${pageContext.servletContext.contextPath}/cart" class="btn btn-outline-success">
-        <input type="submit" value="Back to cart">
-    </form>
-
-<p>
-<form method="get" href="/phoneshop_web_war_exploded/productList?query=${param.query}&order=desc&fieldToSort=model&page=${page}">
-    <input type="hidden" name="order" value="desc">
-    <input type="hidden" name="fieldToSort" value="displaySizeInches">
-    <input type="hidden" name="page" value="${page}">
+<form method="get" action="${pageContext.servletContext.contextPath}/cart" class="btn btn-outline-success">
+    <input type="submit" value="Back to cart">
 </form>
-</p>
+
+<form method="get" action="${pageContext.servletContext.contextPath}/admin/orders?pageForOrder=1">
+    <input type="submit" value="Admin Page">
+</form>
 
 <table class="table table-bordered">
     <thead class="thead-light">
@@ -48,42 +45,43 @@
     </thead>
 
     <form:form modelAttribute="orderModel" method="get">
-    <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="status">
-        <input style="visibility: hidden" name="orderItems[status.index].phone" value="${cartItem.getPhone()}">
-        <tr class="productList">
-            <td>${cartItem.getPhone().getBrand()}</td>
-            <td>
-                <a href="${pageContext.servletContext.contextPath}/productDetailsPage/productId=${cartItem.getPhone().getId()}">${cartItem.getPhone().getModel()}</a>
-                <input type="hidden" name="phoneId" value="${cartItem.getPhone().getId()}">
-            </td>
-            <td>$ ${cartItem.getPhone().getPrice()}</td>
-            <td>${cartItem.getPhone().getDisplaySizeInches()}</td>
-            <td>
-                <c:forEach items="${cartItem.getPhone().colors}" var="colorItem">
-                    <p>
-                            ${colorItem.code}
-                    </p>
-                </c:forEach>
-            </td>
-            <td>${cartItem.getPhone().getDescription()}</td>
-            <td>
-                <input type="text" name="quantity" id="${cartItem.getPhone().getId()}" value="${cartItem.getQuantity()}">
-                <div style="color: red; font-size: small">
-                    <c:forEach var="errorItem" items="${errors}">
-                        <c:if test="${errorItem.code.equals(cartItem.getPhone().getId().toString())}">
-                            <c:out value="${errorItem.defaultMessage}"/>
-                        </c:if>
+        <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="status">
+            <input style="visibility: hidden" name="orderItems[status.index].phone" value="${cartItem.getPhone()}">
+            <tr class="productList">
+                <td>${cartItem.getPhone().getBrand()}</td>
+                <td>
+                    <a href="${pageContext.servletContext.contextPath}/productDetailsPage/productId=${cartItem.getPhone().getId()}">${cartItem.getPhone().getModel()}</a>
+                    <input type="hidden" name="phoneId" value="${cartItem.getPhone().getId()}">
+                </td>
+                <td>$ ${cartItem.getPhone().getPrice()}</td>
+                <td>${cartItem.getPhone().getDisplaySizeInches()}</td>
+                <td>
+                    <c:forEach items="${cartItem.getPhone().colors}" var="colorItem">
+                        <p>
+                                ${colorItem.code}
+                        </p>
                     </c:forEach>
+                </td>
+                <td>${cartItem.getPhone().getDescription()}</td>
+                <td>
+                    <input type="text" name="quantity" id="${cartItem.getPhone().getId()}"
+                           value="${cartItem.getQuantity()}">
+                    <div style="color: red; font-size: small">
+                        <c:forEach var="errorItem" items="${errors}">
+                            <c:if test="${errorItem.code.equals(cartItem.getPhone().getId().toString())}">
+                                <c:out value="${errorItem.defaultMessage}"/>
+                            </c:if>
+                        </c:forEach>
+                    </div>
+                </td>
                 </div>
-            </td>
-        </div>
-        </tr>
+            </tr>
 
-    </c:forEach>
+        </c:forEach>
     </form:form>
 </table>
 
-    <form:form modelAttribute="orderForm" method="post">
+<form:form modelAttribute="orderForm" method="post">
     <table class="table table-bordered">
         <thead class="thead-light">
         <tr>
@@ -129,20 +127,18 @@
         <input formmethod="post" type="submit" value="Place order">
     </table>
 
-    </form:form>
+</form:form>
 
-    <form:form modelAttribute="orderModel">
-        <input name="firstName" value="${orderForm.firstName}" hidden>
-        <input name="lastName" value="${orderForm.lastName}" hidden>
-        <input name="deliveryAddress" value="${orderForm.deliveryAddress}" hidden>
-        <input name="contactPhoneNo" value="${orderForm.contactPhoneNo}" hidden>
-        <input name="otherInfo" value="${orderForm.otherInfo}" hidden>
-        <c:forEach var="cartItem" items="${cart.cartItems}">
-            <c:set var="orderItem" value="${cartItem.phone}, ${cartItem.quantity}"/>
-            ${orderModel.orderItems.add(orderItem)}
-        </c:forEach>
-    </form:form>
-</p>
+<form:form modelAttribute="orderModel">
+    <input name="firstName" value="${orderForm.firstName}" hidden>
+    <input name="lastName" value="${orderForm.lastName}" hidden>
+    <input name="deliveryAddress" value="${orderForm.deliveryAddress}" hidden>
+    <input name="contactPhoneNo" value="${orderForm.contactPhoneNo}" hidden>
+    <input name="otherInfo" value="${orderForm.otherInfo}" hidden>
+    <c:forEach var="cartItem" items="${cart.cartItems}">
+        <c:set var="orderItem" value="${cartItem.phone}, ${cartItem.quantity}"/>
+        ${orderModel.orderItems.add(orderItem)}
+    </c:forEach>
+</form:form>
 </body>
 </html>
-

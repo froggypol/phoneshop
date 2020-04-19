@@ -2,8 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%--<jsp:useBean id="order" type="com.es.core.order.OrderModel" scope="request"/>--%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
@@ -17,9 +15,14 @@
         <a href="${pageContext.servletContext.contextPath}/productList">Back To The Main Page</a>
     </tr>
 </p>
+
+<form method="get" action="${pageContext.servletContext.contextPath}/admin/orders?pageForOrder=1">
+    <input type="submit" value="Admin Page">
+</form>
+
 <form:form modelAttribute="orderModel">
-<p> Congratulations! Your order is :</p>
-<p>
+    <p> Congratulations! Your order is :</p>
+    <p>
     <div>
         <label>
             <input value="Delivery Cost : ${orderModel.deliveryPrice}" readonly>
@@ -33,35 +36,35 @@
     </div>
 
     <table class="table table-bordered">
-    <thead class="thead-light">
-    <tr>
-        <th scope="col" style="width: 10rem;">Image</th>
-        <th scope="col" style="width: 10rem;">Description</th>
-        <th scope="col" style="width: 10rem;">Price</th>
-        <th scope="col" style="width: 20rem;">Quantity</th>
-    </tr>
-    </thead>
+        <thead class="thead-light">
+        <tr>
+            <th scope="col" style="width: 10rem;">Image</th>
+            <th scope="col" style="width: 10rem;">Description</th>
+            <th scope="col" style="width: 10rem;">Price</th>
+            <th scope="col" style="width: 20rem;">Quantity</th>
+        </tr>
+        </thead>
 
-<c:forEach var="orderItem" items="${orderModel.orderItems}">
-    <tr class="prod">
-        <td>
-            <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${orderItem.phone.imageUrl}">
-        </td>
-        <td>
-            <a>${orderItem.phone.description}</a>
-        </td>
-        <td class="price">
-            <input value="${orderItem.phone.price}"/>
-        </td>
-        <td>
-            <label>
-                <input name="quantity" value="${orderItem.quantity}" readonly>
-            </label>
-        </td>
-    </tr>
-    </c:forEach>
-</table>
-<br>
+        <c:forEach var="orderItem" items="${orderModel.orderItems}">
+            <tr class="prod">
+                <td>
+                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${orderItem.phone.imageUrl}">
+                </td>
+                <td>
+                    <a>${orderItem.phone.description}</a>
+                </td>
+                <td class="price">
+                    <input value="${orderItem.phone.price}"/>
+                </td>
+                <td>
+                    <label>
+                        <input name="quantity" value="${orderItem.quantity}" readonly>
+                    </label>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+    <br>
 </form:form>
 <p>Customer info:</p>
 <form:form modelAttribute="orderModel">
@@ -76,7 +79,7 @@
         </tr>
         <tr>
             <td>
-                    <form:input path="firstName" cssClass="text-input" readonly="true"/>
+                <form:input path="firstName" cssClass="text-input" readonly="true"/>
                 <div style="color: red; font-size: small">
                     <form:errors cssClass="errors" path="firstName"/>
                 </div>

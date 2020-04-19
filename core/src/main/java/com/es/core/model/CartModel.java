@@ -98,12 +98,13 @@ public class CartModel {
     }
 
     public void updateCart(CartItemModel addedCartItem, CartItemModel cartItemToAdd) {
-        if (cartItemToAdd.getQuantity() <= addedCartItem.getPhone().getStock()) {
+        if (addedCartItem.getPhone().getStock() > 0 &&
+                cartItemToAdd.getQuantity() <= addedCartItem.getPhone().getStock()) {
             addedCartItem.setQuantity(cartItemToAdd.getQuantity());
             cartItems.set(cartItems.indexOf(addedCartItem), addedCartItem);
             recalculateBalance();
         } else {
-            throw new OutOfStockException();
+            cartItems.remove(addedCartItem);
         }
     }
 }
