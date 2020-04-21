@@ -9,6 +9,8 @@
 
     <context:property-placeholder location="classpath:properties/application.properties"/>
 
+    <beans:bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
     <http auto-config="true">
 
         <access-denied-handler error-page="/errorPages/403"/>
@@ -33,15 +35,6 @@
         <csrf disabled="true"/>
     </http>
 
-    <authentication-manager>
-        <authentication-provider>
-            <user-service>
-                <user name="froggypol" password="123456" authorities="ROLE_ADMIN"/>
-            </user-service>
-        </authentication-provider>
-    </authentication-manager>
-
-
     <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <beans:property name="driverClassName" value="${db.driver}"/>
         <beans:property name="url" value="${db.url}"/>
@@ -55,6 +48,7 @@
 
     <authentication-manager>
         <authentication-provider>
+            <password-encoder ref="bcryptEncoder"/>
             <jdbc-user-service data-source-ref="dataSource" users-by-username-query=
                                        "select username,password, enabled from users where username = ?"
                                authorities-by-username-query="select username, role from user_roles where username = ? "/>

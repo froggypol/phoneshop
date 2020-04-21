@@ -21,6 +21,7 @@
     </sec:authorize>
 </header>
 
+<c:if test="${orderList.size()!=0}">
 <p>
     Found
     <c:out value="${orderList.size()}"/> orders.
@@ -30,17 +31,6 @@
     <form:form modelAttribute="orderList">
         <c:forEach var="orderItemModel" items="${orderList}">
         <p>
-        <%--<div>--%>
-            <%--<label>--%>
-                <%--<input value="Delivery Cost : ${orderItemModel.deliveryPrice}" readonly>--%>
-            <%--</label>--%>
-            <%--<label>--%>
-                <%--<input value="Total Cost : ${orderItemModel.totalPrice}" readonly>--%>
-            <%--</label>--%>
-            <%--<label>--%>
-                <%--<input value="Subtotal Cost : ${orderItemModel.subtotal}" readonly>--%>
-            <%--</label>--%>
-        <%--</div>--%>
 
         <table class="table table-bordered">
             <thead class="thead-light">
@@ -55,7 +45,6 @@
             </tr>
             </thead>
 
-            <%--<c:forEach var="orderItem" items="${orderItemModel.orderItems}">--%>
                 <tr class="prod">
                     <td>
                         <a href="${pageContext.servletContext.contextPath}/admin/orders/${orderItemModel.number}">${orderItemModel.number}</a>
@@ -67,7 +56,7 @@
                     <td>${orderItemModel.totalPrice}</td>
                     <td>${orderItemModel.status}</td>
                 </tr>
-            <%--</c:forEach>--%>
+
         </table>
         <br>
         </c:forEach>
@@ -115,5 +104,10 @@
         </li>
     </ul>
 </nav>
+    </c:if>
+    <c:if test="${orderList.size() == 0}">
+        <c:out value="Empty order list"/>
+        <a href="${pageContext.servletContext.contextPath}/productList">Back</a>
+    </c:if>
 </body>
 </html>
