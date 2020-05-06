@@ -41,7 +41,10 @@ Found
 
 <body>
 
+
+
 <form:form method="post" modelAttribute="cartPageDTO">
+
     <table class="table table-bordered">
 
     <thead class="thead-light">
@@ -57,8 +60,6 @@ Found
         <th scope="col">Action</th>
     </tr>
     </thead>
-
-    <input type="hidden" name="_method" value="PUT" id="method-put"/>
 
     <c:forEach var="cartItemModel" items="${cart.cartItems}" varStatus="status">
         <tr class="productList">
@@ -97,7 +98,7 @@ Found
         </td>
         </tr>
     </c:forEach>
-        <input type="submit" class="btn btn-success" value="Update"/>
+        <input type="submit" class="btn btn-success" value="Update" formaction="${pageContext.servletContext.contextPath}/cart/update"/>
 
     </table>
 </form:form>
