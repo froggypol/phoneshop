@@ -1,6 +1,7 @@
 package com.es.core.dto;
 
 import com.es.core.util.validators.model.ValidQuantityModel;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -8,9 +9,10 @@ import javax.validation.constraints.NotNull;
 @ValidQuantityModel
 public class ProductInfoDTO {
 
+    @NotEmpty(message = "Empty input!")
     private String modelToAdd;
 
-    private String quantityToAdd;
+    private Integer quantityToAdd;
 
     @NotNull
     @Min(value = 1000L)
@@ -19,7 +21,7 @@ public class ProductInfoDTO {
     public ProductInfoDTO() {
     }
 
-    public ProductInfoDTO(String modelToAdd, String quantityToAdd, Long productId) {
+    public ProductInfoDTO(String modelToAdd, Integer quantityToAdd, Long productId) {
         this.modelToAdd = modelToAdd;
         this.quantityToAdd = quantityToAdd;
         this.productId = productId;
@@ -33,11 +35,11 @@ public class ProductInfoDTO {
         this.modelToAdd = modelToAdd;
     }
 
-    public String getQuantityToAdd() {
+    public Integer getQuantityToAdd() {
         return quantityToAdd;
     }
 
-    public void setQuantityToAdd(String quantityToAdd) {
+    public void setQuantityToAdd(Integer quantityToAdd) {
         this.quantityToAdd = quantityToAdd;
     }
 

@@ -19,35 +19,52 @@ public class QuantityModelValidator implements ConstraintValidator<ValidQuantity
     }
 
     @Override
-    public boolean isValid(ProductInfoDTO productInfoDTO, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(ProductInfoDTO productInfoDTO, ConstraintValidatorContext validatorContext) {
         PhoneModel phoneModel = phoneService.getByModel(productInfoDTO.getModelToAdd());
         if (phoneModel != null) {
             productInfoDTO.setProductId(phoneModel.getId());
         } else {
-          return false;
+            setErrorMessageForModelInvalidInput(productInfoDTO, validatorContext);
+            return false;
         }
-        if (productInfoDTO.getModelToAdd().isEmpty() || productInfoDTO.getModelToAdd().equals(" ")){
-            constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid input" + productInfoDTO.getModelToAdd())
-                    .addNode("modelToAdd")
-                    .addConstraintViolation();
+        if (productInfoDTO.getModelToAdd().equals(" ")) {
+            setErrorMessageForModelInvalidInput(productInfoDTO, validatorContext);
         }
-        if (productInfoDTO.getQuantityToAdd().matches("[0-9]+") && !productInfoDTO.getQuantityToAdd().isEmpty()) {
-            if (Long.valueOf(productInfoDTO.getQuantityToAdd()) > phoneModel.getStock()) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Available stock is : "
-                        + phoneModel.getStock() + " items. You added" + productInfoDTO.getQuantityToAdd())
-                        .addNode("quantityToAdd")
-                        .addConstraintViolation();
+        if (productInfoDTO.getQuantityToAdd() != null && productInfoDTO.getQuantityToAdd().toString().matches("[0-9]+")) {
+                return checkIfQuantityOutOfStock(productInfoDTO, phoneModel, validatorContext);
+        } else {
+                setErrorMessageForQuantityInvalidFormat(validatorContext);
                 return false;
             }
-        } else {
-            constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("invalid input format")
-                    .addNode("quantityToAdd")
-                    .addConstraintViolation();
+    }
+
+    private void setErrorMessageForModelInvalidInput(ProductInfoDTO productInfoDTO, ConstraintValidatorContext validatorContext) {
+        validatorContext.disableDefaultConstraintViolation();
+        validatorContext.buildConstraintViolationWithTemplate("Invalid input " + productInfoDTO.getModelToAdd())
+                        .addNode("modelToAdd")
+                        .addConstraintViolation();
+    }
+
+    private void setErrorMessageForQuantityInvalidFormat(ConstraintValidatorContext validatorContext) {
+        validatorContext.disableDefaultConstraintViolation();
+        validatorContext.buildConstraintViolationWithTemplate("invalid input format")
+                        .addNode("quantityToAdd")
+                        .addConstraintViolation();
+    }
+
+    private boolean checkIfQuantityOutOfStock(ProductInfoDTO productInfoDTO, PhoneModel phoneModel, ConstraintValidatorContext validatorContext) {
+        if (Long.valueOf(productInfoDTO.getQuantityToAdd()) > phoneModel.getStock()) {
+            setErrorMessageForOutOfStockQuantity(productInfoDTO, phoneModel, validatorContext);
             return false;
         }
         return true;
+    }
+
+    private void setErrorMessageForOutOfStockQuantity(ProductInfoDTO productInfoDTO, PhoneModel phoneModel, ConstraintValidatorContext validatorContext) {
+        validatorContext.disableDefaultConstraintViolation();
+        validatorContext.buildConstraintViolationWithTemplate("Available stock is : "
+                + phoneModel.getStock() + " items. You added " + productInfoDTO.getQuantityToAdd())
+                        .addNode("quantityToAdd")
+                        .addConstraintViolation();
     }
 }

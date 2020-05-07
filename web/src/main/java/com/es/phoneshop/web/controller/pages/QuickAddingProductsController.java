@@ -8,6 +8,7 @@ import com.es.service.HttpSessionCartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,13 +18,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
+@Validated
 public class QuickAddingProductsController {
 
     @Resource
     private HttpSessionCartService cartService;
 
     @GetMapping(value = "/quickAdding")
-    public String getPage(Model model) {
+    public String getPage(@ModelAttribute(name = "productDTO") ProductPageDTO productPageDTO, Model model) {
         CartModel cart = cartService.getCart();
         cartService.saveItemsToSession();
         model.addAttribute("cart", cart);

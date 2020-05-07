@@ -1,10 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="FORM" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 
@@ -37,42 +35,34 @@
 
 <table class="table table-bordered">
 
-    <form:form modelAttribute="productDTO" method="post"
-               action="${pageContext.servletContext.contextPath}/quickAdding/add">
-        <input type="submit" class="btn btn-outline-daanger" value="Add">
+    <spring:form modelAttribute="productDTO" method="post" action="${pageContext.servletContext.contextPath}/quickAdding/add">
+        <input type="submit" class="btn btn-outline-danger" value="Add">
         <c:forEach begin="0" end="${itemsNumber}" var="cartItem" varStatus="status">
+            <c:set var="i" value="${status.index}"/>
             <tr class="productList">
                 <td>
-                    <input name="productInfoDTOs[${status.index}].modelToAdd"
-                           value="${productDTO.productInfoDTOs[status.index].modelToAdd}"/>
+                    <form:input path="productInfoDTOs[${i}].modelToAdd"/>
                     <div style="color: red; font-size: small">
-                        <form:errors cssClass="error" path="productInfoDTOs[${status.index}].modelToAdd"/>
+                        <form:errors cssClass="error" path="productInfoDTOs[${i}].modelToAdd"/>
                     </div>
                 </td>
                 <td>
-
-                    <input name="productInfoDTOs[${status.index}].quantityToAdd"
-                           value="${productDTO.productInfoDTOs[status.index].quantityToAdd}"/>
+                    <form:input path="productInfoDTOs[${i}].quantityToAdd"/>
+                    <form:input style="visibility: hidden" path="productInfoDTOs[${i}].productId"/>
                     <c:if test="${cart.cartItems.indexOf(cartItem) != -1}">
-                        <input style="visibility: hidden" name="productInfoDTOs[${status.index}].productId"
-                               value="${cart.cartItems.get(cart.cartItems.indexOf(cartItem)).phone.id}"/>
                         <div style="color: red; font-size: small">
-                            <form:errors cssClass="error" path="productInfoDTOs[${status.index}].quantityToAdd"/>
+                            <form:errors cssClass="error" path="productInfoDTOs[${i}].quantityToAdd"/>
                         </div>
                     </c:if>
                     <c:if test="${cart.cartItems.indexOf(cartItem) == -1}">
-                        <input style="visibility: hidden" name="productInfoDTOs[${status.index}].productId" value=" "/>
                         <div style="color: red; font-size: small">
-                            <form:errors cssClass="error" path="productInfoDTOs[${status.index}].quantityToAdd"/>
+                            <form:errors cssClass="error" path="productInfoDTOs[${i}].quantityToAdd"/>
                         </div>
                     </c:if>
-
                 </td>
             </tr>
         </c:forEach>
-    </form:form>
+    </spring:form>
 </table>
-</p>
-
 </body>
 </html>

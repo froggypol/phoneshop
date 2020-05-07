@@ -1,12 +1,10 @@
 package com.es.core.dto;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ProductPageDTO {
 
-    @NotNull
     @Valid
     private List<ProductInfoDTO> productInfoDTOs;
 

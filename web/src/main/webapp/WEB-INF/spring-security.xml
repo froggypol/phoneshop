@@ -33,6 +33,16 @@
                 password-parameter="password"/>
         <logout logout-success-url="/login?logout"/>
         <csrf disabled="true"/>
+
+        <intercept-url pattern="/quickAdding**" access="hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')"/>
+        <form-login
+                login-page="/login"
+                default-target-url="/quickAdding"
+                authentication-failure-url="/login?error"
+                username-parameter="username"
+                password-parameter="password"/>
+        <logout logout-success-url="/login?logout"/>
+        <csrf disabled="true"/>
     </http>
 
     <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
