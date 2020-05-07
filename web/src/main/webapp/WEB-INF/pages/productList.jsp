@@ -14,7 +14,8 @@
 
 <header>
     <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
-        <input type="submit" class="btn btn-outline-danger"  id="cartQuantity" value="Total quantity : ${cart.totalQuantity} items">
+        <input type="submit" class="btn btn-outline-danger" id="cartQuantity"
+               value="Total quantity : ${cart.totalQuantity} items">
     </form>
     <form class="cartInfo" action="${pageContext.servletContext.contextPath}/cart">
         <input type="submit" class="btn btn-outline-danger" id="cartValue" value="Total cost : ${cart.totalCost} $">
@@ -29,8 +30,12 @@
     <c:out value="${phones.size()}"/> phones.
 
     <body>
+    <form method="get" action="${pageContext.servletContext.contextPath}/quickAdding">
+        <input type="submit" class="btn btn-outline-success" value="Quick Adding">
+    </form>
 <p>
-<form method="get" href="/phoneshop_web_war_exploded/productList?query=${param.query}&order=desc&fieldToSort=model&page=${page}">
+<form method="get"
+      href="/phoneshop_web_war_exploded/productList?query=${param.query}&order=desc&fieldToSort=model&page=${page}">
     <div class="col-2">
         <input type="text" class="form-control" placeholder="Query" name="query" value="${param.query}">
         <button class="btn btn-outline-success">Search</button>

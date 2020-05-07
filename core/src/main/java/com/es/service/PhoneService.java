@@ -33,6 +33,15 @@ public class PhoneService {
         }
     }
 
+    public PhoneModel getByModel(final String model) {
+        Optional<PhoneModel> phone = phoneDao.getByModel(model);
+        if (phone.isPresent()) {
+            return phone.get();
+        } else {
+            return null;
+        }
+    }
+
     public void updateProductAfterOrder() {
         CartModel cart = cartService.getCart();
         phoneDao.updateAfterOrder(cart);

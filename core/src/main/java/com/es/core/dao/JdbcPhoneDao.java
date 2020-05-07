@@ -8,7 +8,10 @@ import com.es.core.model.extractor.PhoneExtractor;
 import com.es.core.model.ProductListPageParametersModel;
 import com.es.core.util.FindAndSortUtil;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,6 +35,12 @@ public class JdbcPhoneDao implements PhoneDao {
         return  getPhoneListWithColors().stream()
                                         .filter(phone -> phone.getId().equals(key))
                                         .findAny();
+    }
+
+    @Override
+    public Optional<PhoneModel> getByModel(String modelToFind) {
+        return Optional.of(jdbcTemplate.query(PHONES_WITH_COLORS_QUERY + " and lower(phones.model) like ? ", new Object[]{"%" + modelToFind.toLowerCase() + "%"},
+                new PhoneExtractor()).get(0));
     }
 
     public void save(final PhoneModel phoneToSave) {

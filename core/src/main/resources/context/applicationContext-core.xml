@@ -118,10 +118,14 @@
 
     <bean id="cartInfoDTO" class="com.es.core.dto.CartInfoDTO"/>
 
+    <bean id="productPageDTO" class="com.es.core.dto.ProductPageDTO"/>
+
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
     <bean id="orderValidator" class="com.es.core.util.validators.PlaceOrderValidator"/>
+
+    <bean id="modelValidator" class="com.es.core.util.validators.model.QuantityModelValidator"/>
 
     <jdbc:initialize-database enabled="true" data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql"/>

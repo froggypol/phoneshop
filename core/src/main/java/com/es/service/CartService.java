@@ -1,5 +1,6 @@
 package com.es.service;
 
+import com.es.core.dto.ProductPageDTO;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.AddingToCartModel;
 import com.es.core.model.CartItemModel;
@@ -17,4 +18,6 @@ public interface CartService {
     void update(Map<Long, String> itemsWithNewQnt, List<CartItemModel> cartItemModels);
 
     void remove(Long phoneId);
+
+    void addPhonesFromQuickPage(ProductPageDTO productPageDTO);
 }

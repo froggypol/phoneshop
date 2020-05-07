@@ -9,6 +9,8 @@ public interface PhoneDao {
 
     Optional<PhoneModel> get(Long key);
 
+    Optional<PhoneModel> getByModel(String model);
+
     void save(PhoneModel phone);
 
     List<PhoneModel> findAll(int limit, int offset);

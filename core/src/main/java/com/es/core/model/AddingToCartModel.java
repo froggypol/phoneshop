@@ -11,6 +11,11 @@ public class AddingToCartModel {
         this.quantityToAdd = 1L;
     }
 
+    public AddingToCartModel(Long idOfAddingPhone, Long quantityToAdd) {
+        this.idOfAddingPhone = idOfAddingPhone;
+        this.quantityToAdd = quantityToAdd;
+    }
+
     public Long getIdOfAddingPhone() {
         return idOfAddingPhone;
     }

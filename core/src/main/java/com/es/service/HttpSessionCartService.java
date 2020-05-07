@@ -1,10 +1,13 @@
 package com.es.service;
 
+import com.es.core.dto.ProductPageDTO;
 import com.es.core.model.AddingToCartModel;
 import com.es.core.model.CartItemModel;
 import com.es.core.exceptions.OutOfStockException;
 import com.es.core.model.CartModel;
 import com.es.core.model.PhoneModel;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,7 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@PropertySource("classpath:properties/application.properties")
 public class HttpSessionCartService implements CartService {
+
+    @Value("#{new java.lang.Integer(${quickItems.number})}")
+    private int itemsOnQuickPage;
 
     @Resource
     private HttpSession session;
@@ -25,6 +32,13 @@ public class HttpSessionCartService implements CartService {
     public CartModel getCart() {
         CartModel cart = (CartModel) session.getAttribute("cart");
         return cart;
+    }
+
+    @Override
+    public void addPhonesFromQuickPage(ProductPageDTO productPageDTO) {
+        productPageDTO.getProductInfoDTOs().stream()
+                                           .forEach(productDTO -> addPhone(new AddingToCartModel(productDTO.getProductId(),
+                                                                            Long.valueOf(productDTO.getQuantityToAdd()))));
     }
 
     @Override
@@ -71,5 +85,17 @@ public class HttpSessionCartService implements CartService {
         CartModel cartModel = getCart();
         PhoneModel phoneModelToDelete = phoneService.get(phoneId);
         cartModel.deleteFomCart(phoneModelToDelete);
+    }
+
+    public void saveItemsToSession() {
+        session.setAttribute("itemsNumber", itemsOnQuickPage);
+    }
+
+    public int getItemsOnQuickPage() {
+        return itemsOnQuickPage;
+    }
+
+    public void setItemsOnQuickPage(int itemsOnQuickPage) {
+        this.itemsOnQuickPage = itemsOnQuickPage;
     }
 }
