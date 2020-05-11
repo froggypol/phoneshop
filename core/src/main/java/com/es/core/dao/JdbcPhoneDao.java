@@ -36,9 +36,9 @@ public class JdbcPhoneDao implements PhoneDao {
 
     @Override
     public Optional<PhoneModel> getByModel(String modelToFind) {
-        List<PhoneModel> phoneModels = jdbcTemplate.query(PHONES_WITH_COLORS_QUERY + " and lower(phones.brand) like ? ", new Object[]{"%" + modelToFind.toLowerCase() + "%"},
-                new PhoneExtractor());
-        return phoneModels.size() == 0 ? Optional.empty() : Optional.of(phoneModels.get(0));
+        List<PhoneModel> phoneModels = jdbcTemplate.query(PHONES_WITH_COLORS_QUERY + " and lower(phones.brand) like ? ",
+                new Object[]{"%" + modelToFind.toLowerCase() + "%"}, new PhoneExtractor());
+        return phoneModels.stream().findAny();
     }
 
     public void save(final PhoneModel phoneToSave) {

@@ -33,13 +33,8 @@ public class PhoneService {
         }
     }
 
-    public PhoneModel getByModel(final String model) {
-        Optional<PhoneModel> phone = phoneDao.getByModel(model);
-        if (phone.isPresent()) {
-            return phone.get();
-        } else {
-            return null;
-        }
+    public PhoneModel getByModel(final String model) throws NotFoundPhoneCustomException {
+        return phoneDao.getByModel(model).orElseThrow(() -> new NotFoundPhoneCustomException());
     }
 
     public void updateProductAfterOrder() {

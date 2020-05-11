@@ -120,12 +120,15 @@
 
     <bean id="productPageDTO" class="com.es.core.dto.ProductPageDTO"/>
 
-    <bean id="validator"
-          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
     <bean id="orderValidator" class="com.es.core.util.validators.PlaceOrderValidator"/>
 
     <bean id="modelValidator" class="com.es.core.util.validators.model.QuantityModelValidator"/>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+           <property name="basename" value="/properties/application"/>
+    </bean>
 
     <jdbc:initialize-database enabled="true" data-source="dataSource">
         <jdbc:script location="classpath:db/schema.sql"/>
